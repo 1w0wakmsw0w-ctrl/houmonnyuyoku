@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自宅でお風呂に入る権利 — 訪問入浴介護の役割と可能性</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reset.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+
+<style>
+:root{
+  --primary:#1A5276;
+  --secondary:#1D9E75;
+  --accent:#2E86C1;
+  --bg:#FFFFFF;
+  --text:#1C2833;
+  --sub:#566573;
+  --gray:#BDC3C7;
+  --amber:#F39C12;
+  --line:#E5E9EC;
+  --tint:#F4F8FA;
+  --tint-green:#EAF7F1;
+}
+
+/* ===== ベース ===== */
+.reveal-viewport{ background:#0E2A3A; }
+.reveal{
+  font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+  font-size:22px;
+  font-weight:400;
+  color:var(--text);
+}
+.reveal .slides{ text-align:left; }
+.reveal .slides section{
+  background:var(--bg);
+  height:100%;
+  padding:44px 60px 42px;
+  box-sizing:border-box;
+  line-height:1.6;
+}
+.reveal h1,.reveal h2,.reveal h3,.reveal h4{
+  font-family:inherit;
+  color:var(--primary);
+  text-transform:none;
+  letter-spacing:.01em;
+  margin:0;
+  line-height:1.35;
+}
+.reveal h2{ font-size:38px; font-weight:700; }
+.reveal h3{ font-size:30px; font-weight:600; }
+.reveal p{ margin:0 0 .6em; }
+.reveal strong{ color:var(--secondary); font-weight:700; }
+.reveal section img{ border:none; box-shadow:none; }
+
+/* ===== 章ラベル（左上） ===== */
+.chapter{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:15px;
+}
+.chapter .num{
+  background:var(--primary);
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.06em;
+  padding:6px 14px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+.chapter .name{
+  color:var(--sub);
+  font-size:17px;
+  font-weight:500;
+  letter-spacing:.04em;
+}
+.rule{
+  height:4px;
+  width:76px;
+  background:var(--secondary);
+  border-radius:2px;
+  margin:12px 0 20px;
+}
+
+/* ===== 表紙 ===== */
+.cover{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  height:100%;
+}
+.cover .eyebrow{
+  color:var(--secondary);
+  font-size:19px;
+  font-weight:700;
+  letter-spacing:.14em;
+  margin-bottom:22px;
+}
+.cover h1{
+  font-size:64px;
+  font-weight:900;
+  color:var(--primary);
+  line-height:1.25;
+  letter-spacing:.01em;
+}
+.cover .sub{
+  font-size:27px;
+  font-weight:500;
+  color:var(--text);
+  margin-top:20px;
+}
+.cover .meta{
+  margin-top:52px;
+  padding-top:26px;
+  border-top:2px solid var(--line);
+  color:var(--sub);
+  font-size:19px;
+  line-height:1.9;
+}
+.cover .meta .org{ color:var(--primary); font-weight:700; font-size:21px; }
+
+/* ===== 汎用パーツ ===== */
+.lead{
+  font-size:24px;
+  font-weight:500;
+  color:var(--primary);
+  margin-bottom:18px;
+}
+.cols{ display:flex; gap:26px; align-items:stretch; }
+.cols > *{ flex:1; }
+
+.card{
+  background:var(--tint);
+  border-radius:10px;
+  padding:22px 24px;
+  border-top:5px solid var(--accent);
+}
+.card.green{ background:var(--tint-green); border-top-color:var(--secondary); }
+.card h4{ font-size:21px; font-weight:700; margin-bottom:10px; }
+.card h4.g{ color:var(--secondary); }
+.card p, .card li{ font-size:18px; color:var(--text); line-height:1.65; }
+.card .note{ color:var(--sub); font-size:16px; }
+
+ul.plain{ list-style:none; margin:0; padding:0; }
+ul.plain li{
+  position:relative;
+  padding-left:26px;
+  margin-bottom:8px;
+  font-size:19px;
+}
+ul.plain li::before{
+  content:"";
+  position:absolute;
+  left:4px; top:.62em;
+  width:9px; height:9px;
+  border-radius:50%;
+  background:var(--secondary);
+}
+.reveal ul.plain li ul{ margin-top:6px; }
+
+.kicker{
+  display:inline-block;
+  background:var(--secondary);
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+  padding:5px 13px;
+  border-radius:4px;
+  margin-bottom:12px;
+}
+.kicker.blue{ background:var(--accent); }
+.kicker.gray{ background:var(--sub); }
+
+.hl{ background:linear-gradient(transparent 62%, #B7EBD6 62%); font-weight:700; color:var(--text); }
+
+/* ===== 比較表 ===== */
+table.cmp{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:20px;
+  margin-top:6px;
+}
+table.cmp th, table.cmp td{
+  padding:10px 12px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+}
+table.cmp thead th{
+  background:var(--primary);
+  color:#fff;
+  font-weight:700;
+  font-size:19px;
+  border-bottom:none;
+}
+table.cmp thead th:first-child{ border-radius:8px 0 0 0; }
+table.cmp thead th:last-child{ border-radius:0 8px 0 0; }
+table.cmp thead th.own{ background:var(--secondary); }
+table.cmp tbody th{
+  text-align:left;
+  font-weight:600;
+  color:var(--text);
+  background:var(--tint);
+  font-size:19px;
+  width:31%;
+}
+table.cmp td.own{ background:var(--tint-green); font-weight:700; }
+table.cmp tbody tr:last-child th{ border-radius:0 0 0 8px; }
+.mk{ font-size:26px; font-weight:900; line-height:1; }
+.ok{ color:var(--secondary); }
+.no{ color:var(--gray); }
+.tri{ color:var(--amber); }
+.legend{ margin-top:14px; color:var(--sub); font-size:16px; }
+.legend span{ margin-right:22px; }
+
+/* ===== 4条件（スライド4） ===== */
+.four{ display:flex; gap:18px; margin:8px 0 24px; }
+.four .item{
+  flex:1;
+  background:var(--tint-green);
+  border:2px solid var(--secondary);
+  border-radius:12px;
+  padding:22px 12px;
+  text-align:center;
+}
+.four .item .ico{ font-size:44px; line-height:1; margin-bottom:10px; }
+.four .item .t{ font-size:23px; font-weight:700; color:var(--primary); }
+.four .item .d{ font-size:15px; color:var(--sub); margin-top:6px; }
+.catch{
+  background:var(--primary);
+  color:#fff;
+  border-radius:12px;
+  padding:26px 30px;
+  font-size:30px;
+  font-weight:700;
+  text-align:center;
+  line-height:1.5;
+}
+.catch em{ font-style:normal; color:#7EE2BC; }
+
+/* ===== フロー図 ===== */
+.flow{ display:flex; align-items:stretch; gap:0; margin:10px 0 20px; }
+.flow .step{
+  flex:1;
+  background:var(--tint);
+  border-top:5px solid var(--accent);
+  border-radius:8px;
+  padding:16px 10px;
+  text-align:center;
+}
+.flow .step.g{ background:var(--tint-green); border-top-color:var(--secondary); }
+.flow .step .n{
+  font-size:13px; font-weight:700; color:var(--sub); letter-spacing:.1em;
+}
+.flow .step .t{ font-size:19px; font-weight:700; color:var(--primary); margin:5px 0 4px; }
+.flow .step .d{ font-size:14px; color:var(--sub); line-height:1.5; }
+.flow .arw{
+  display:flex; align-items:center; justify-content:center;
+  width:26px; color:var(--gray); font-size:22px; font-weight:700;
+}
+
+/* ===== 連携図 ===== */
+.hub{ display:flex; align-items:center; gap:22px; margin:10px 0 18px; }
+.hub .center{
+  width:220px;
+  background:var(--secondary);
+  color:#fff;
+  border-radius:14px;
+  padding:26px 16px;
+  text-align:center;
+  font-size:23px;
+  font-weight:700;
+  line-height:1.4;
+  flex:none;
+}
+.hub .center small{ display:block; font-size:14px; font-weight:500; opacity:.9; margin-top:6px; }
+.hub .link{ flex:none; color:var(--secondary); font-size:28px; font-weight:700; }
+.hub .partners{ display:grid; grid-template-columns:1fr 1fr; gap:14px; flex:1; }
+.hub .partners div{
+  background:var(--tint);
+  border-left:5px solid var(--primary);
+  border-radius:8px;
+  padding:14px 16px;
+  font-size:19px;
+  font-weight:600;
+  color:var(--primary);
+}
+.hub .partners div small{ display:block; font-size:14px; color:var(--sub); font-weight:400; margin-top:3px; }
+
+/* ===== 単位数 ===== */
+table.fee{ width:100%; border-collapse:collapse; font-size:20px; }
+table.fee th, table.fee td{ padding:9px 14px; border-bottom:1px solid var(--line); }
+table.fee thead th{ background:var(--primary); color:#fff; font-size:18px; font-weight:700; text-align:left; }
+table.fee thead th:last-child{ text-align:right; }
+table.fee td.n{ text-align:right; font-weight:700; font-size:22px; color:var(--primary); white-space:nowrap; }
+table.fee tr.own td{ background:var(--tint-green); }
+table.fee tr.own td.n{ color:var(--secondary); }
+table.fee td small{ color:var(--sub); font-weight:400; font-size:15px; }
+table.fee tr.grp td{ background:var(--primary); color:#fff; font-weight:700;
+  font-size:18px; padding:7px 14px; border-bottom:none; }
+table.fee tr.grp td:last-child{ text-align:right; }
+.badge-new{
+  background:var(--amber); color:#fff; font-size:13px; font-weight:700;
+  padding:2px 8px; border-radius:3px; margin-left:8px; vertical-align:2px;
+}
+
+/* ===== 声 ===== */
+.voice{
+  background:var(--tint);
+  border-left:7px solid var(--secondary);
+  border-radius:0 12px 12px 0;
+  padding:26px 30px;
+  margin-bottom:22px;
+}
+.voice .q{ font-size:26px; font-weight:500; color:var(--text); line-height:1.65; }
+.voice .who{ margin-top:12px; color:var(--sub); font-size:17px; text-align:right; }
+
+/* ===== 連絡先 ===== */
+.contact{ display:flex; gap:38px; align-items:center; }
+.contact .info{ flex:1; }
+.contact .info .org{ font-size:32px; font-weight:700; color:var(--primary); line-height:1.4; }
+.contact .info dl{ margin:22px 0 0; font-size:22px; }
+.contact .info dl div{ display:flex; gap:16px; padding:10px 0; border-bottom:1px solid var(--line); }
+.contact .info dt{ width:96px; color:var(--sub); font-size:18px; font-weight:600; flex:none; padding-top:3px; }
+.contact .info dd{ margin:0; font-weight:700; color:var(--text); }
+.contact .info dd.tel{ font-size:30px; color:var(--secondary); letter-spacing:.02em; }
+.qr{
+  width:220px; height:220px; flex:none;
+  border:3px dashed var(--gray);
+  border-radius:12px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--sub); font-size:16px; text-align:center; gap:8px;
+}
+.qr .box{ font-size:38px; }
+.closing{
+  margin-top:26px;
+  background:var(--secondary);
+  color:#fff;
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+  font-size:26px;
+  font-weight:700;
+}
+
+/* ===== ページ番号 ===== */
+.reveal .slide-number{
+  background:transparent;
+  color:var(--gray);
+  font-size:15px;
+  font-family:inherit;
+  right:24px; bottom:16px;
+}
+
+/* ===== 印刷 ===== */
+@media print{
+  /* 背景色・表のヘッダー色を印刷に反映させる（?print-pdf でのPDF出力用） */
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  .reveal .slides section{ padding:44px 56px; }
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============ 表紙 ============ -->
+<section>
+  <div class="cover">
+    <div class="eyebrow">地域在宅医療情報交換会</div>
+    <h1>自宅でお風呂に<br>入る権利</h1>
+    <div class="sub">訪問入浴介護の役割と可能性</div>
+    <div class="meta">
+      <div class="org">アップルハート八幡西訪問入浴センター</div>
+      <div>管理者・看護師　冨永　一心</div>
+      <div>2024年10月15日（火）19:00〜</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Ch.1-1 課題提起 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 1</span><span class="name">課題提起</span></div>
+  <h2>「在宅で入浴できない」という現実</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="card">
+      <h4>入浴を阻む壁</h4>
+      <ul class="plain">
+        <li>浴槽をまたげない・立位が保てない</li>
+        <li>浴室が狭く介助スペースがない</li>
+        <li>家族だけでは支えきれない（転倒・腰痛）</li>
+        <li>医療的ケアがあり不安で踏み切れない</li>
+        <li>通所への外出そのものが負担</li>
+      </ul>
+      <p class="note">結果として「週1回の清拭のみ」「数か月入浴なし」という状態が生まれる。</p>
+    </div>
+    <div class="card green">
+      <h4 class="g">入浴がもつ意義</h4>
+      <ul class="plain">
+        <li><strong>清潔保持</strong>　全身の洗浄・洗髪</li>
+        <li><strong>感染予防</strong>　尿路・呼吸器感染リスクの低減</li>
+        <li><strong>皮膚トラブル予防</strong>　褥瘡・浸軟・掻痒の抑制</li>
+        <li><strong>QOL</strong>　温熱による安楽・睡眠の改善</li>
+        <li><strong>生きる意欲</strong>　「人として当たり前」の回復</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:22px;font-size:23px;"><span class="hl">入浴は「贅沢」ではなく、在宅療養を支える医療的・生活的インフラ。</span></p>
+</section>
+
+<!-- ============ Ch.1-2 選択肢と課題 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 1</span><span class="name">課題提起</span></div>
+  <h2>入浴支援の選択肢と、その限界</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="card">
+      <span class="kicker gray">選択肢 1</span>
+      <h4>訪問介護（清拭・部分浴）</h4>
+      <p>自宅で受けられ、導入しやすい。</p>
+      <p class="note"><b>限界：</b>全身浴ではなく洗髪・背部が不十分。温熱効果が得られない。看護職の観察が入らない。</p>
+    </div>
+    <div class="card">
+      <span class="kicker gray">選択肢 2</span>
+      <h4>デイサービスでの入浴</h4>
+      <p>週複数回、社会参加とあわせて実施できる。</p>
+      <p class="note"><b>限界：</b>通所という外出が前提。寝たきり・全介助・医療的ケアがあると受け入れ困難。体調不良日は中止に。</p>
+    </div>
+    <div class="card green">
+      <span class="kicker">選択肢 3</span>
+      <h4 class="g">訪問入浴介護</h4>
+      <p>専用浴槽を持ち込み、自宅で全身浴を提供。</p>
+      <p class="note"><b>特徴：</b>看護師同行で重度でも対応可。移動負担ゼロ。</p>
+    </div>
+  </div>
+  <div style="margin-top:24px;background:var(--tint);border-left:6px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 22px;font-size:21px;">
+    <b style="color:var(--primary);">空白地帯：</b>
+    「デイには行けない、でも清拭では足りない」——<span class="hl">重度化した在宅療養者ほど、この谷間に落ちる。</span>
+  </div>
+</section>
+
+<!-- ============ Ch.2-1 比較表 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 2</span><span class="name">比較・差別化</span></div>
+  <h2>3つの入浴支援を比べる</h2>
+  <div class="rule" style="margin-bottom:14px;"></div>
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th class="own">訪問入浴</th>
+        <th>デイ入浴</th>
+        <th>清拭・部分浴</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+      <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
+      <tr><th>移動・外出が不要</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+      <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
+    </tbody>
+  </table>
+  <div class="legend">
+    <span><b class="ok">✓</b> 対応できる</span>
+    <span><b class="tri">△</b> 事業所・状態により異なる</span>
+    <span><b class="no">✕</b> 対応が難しい</span>
+  </div>
+</section>
+
+<!-- ============ Ch.2-2 唯一性 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 2</span><span class="name">比較・差別化</span></div>
+  <h2>訪問入浴にしかできないこと</h2>
+  <div class="rule"></div>
+  <div class="four">
+    <div class="item"><div class="ico">🏠</div><div class="t">自宅で</div><div class="d">移動・外出の負担なし</div></div>
+    <div class="item"><div class="ico">🛁</div><div class="t">全身浴を</div><div class="d">洗髪・背部まで温める</div></div>
+    <div class="item"><div class="ico">🩺</div><div class="t">看護師付きで</div><div class="d">毎回のアセスメント</div></div>
+    <div class="item"><div class="ico">🛏️</div><div class="t">重度でも</div><div class="d">寝たきり・医療的ケア可</div></div>
+  </div>
+  <div class="catch">この<em>4つの条件</em>を同時に満たせるのは、<br>在宅サービスの中で<em>訪問入浴介護だけ</em>です。</div>
+  <p style="margin-top:22px;font-size:20px;color:var(--sub);">
+    どれか1つなら他のサービスでも代替できます。しかし「重度化しても、自宅のまま、湯船に浸かり続ける」ことを保証できるのは訪問入浴だけ——ここが在宅療養の継続を左右します。
+  </p>
+</section>
+
+<!-- ============ Ch.3-1 訪問の流れ ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 3</span><span class="name">サービスの実際</span></div>
+  <h2>訪問の流れ（滞在およそ45〜60分）</h2>
+  <div class="rule" style="margin-bottom:18px;"></div>
+  <div class="flow">
+    <div class="step"><div class="n">STEP 1</div><div class="t">到着・ご挨拶</div><div class="d">ご本人の様子と<br>当日の体調を確認</div></div>
+    <div class="arw">›</div>
+    <div class="step"><div class="n">STEP 2</div><div class="t">機材搬入・設置</div><div class="d">専用浴槽を組立<br>10〜15分</div></div>
+    <div class="arw">›</div>
+    <div class="step g"><div class="n">STEP 3</div><div class="t">バイタル確認</div><div class="d">看護師が判断<br>入浴可否を決定</div></div>
+    <div class="arw">›</div>
+    <div class="step g"><div class="n">STEP 4</div><div class="t">入　浴</div><div class="d">全身浴・洗髪<br>20〜30分</div></div>
+    <div class="arw">›</div>
+    <div class="step g"><div class="n">STEP 5</div><div class="t">スキンケア</div><div class="d">保湿・軟膏塗布<br>褥瘡処置</div></div>
+    <div class="arw">›</div>
+    <div class="step"><div class="n">STEP 6</div><div class="t">記録・連絡</div><div class="d">連絡ノート記載<br>関係職種へ報告</div></div>
+  </div>
+  <div class="cols" style="margin-top:8px;">
+    <div class="card">
+      <h4>入浴できないと判断した場合</h4>
+      <p>発熱・血圧変動・全身状態の悪化時は、看護師の判断で<b>清拭や部分浴に切り替え</b>。中止時もご家族・ケアマネジャーへ理由を報告します。</p>
+    </div>
+    <div class="card green">
+      <h4 class="g">住環境への配慮</h4>
+      <p>給湯は<b>車両または屋内の給湯設備</b>から。ベッドサイドに約2畳のスペースがあれば設置可能。床・寝具の養生も行います。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Ch.3-2 体制 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 3</span><span class="name">サービスの実際</span></div>
+  <h2>スタッフ体制と専門性</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="card green" style="flex:1.15;">
+      <span class="kicker">1名</span>
+      <h4 class="g">看護師</h4>
+      <ul class="plain">
+        <li>入浴前後の<b>アセスメント</b>（バイタル・全身状態）</li>
+        <li>入浴可否の<b>その場での判断</b></li>
+        <li>褥瘡・創傷の観察と処置、軟膏塗布</li>
+        <li>急変時の<b>初期対応と主治医への連絡</b></li>
+        <li>関係職種への<b>情報提供</b></li>
+      </ul>
+    </div>
+    <div class="card" style="flex:1;">
+      <span class="kicker blue">2名</span>
+      <h4>介護スタッフ</h4>
+      <ul class="plain">
+        <li>浴槽の搬入・設置・撤去</li>
+        <li>移乗介助（2名で安全に）</li>
+        <li>洗身・洗髪、更衣</li>
+        <li>居室の養生と原状復帰</li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top:22px;background:var(--tint);border-radius:10px;padding:20px 24px;font-size:21px;">
+    <b style="color:var(--primary);">3名体制である意味 —</b>
+    移乗を2名で担うことで<span class="hl">転倒・皮膚剥離のリスクを抑え</span>、看護師は介助に追われず<span class="hl">観察と判断に専念</span>できます。ご家族が介助に入る必要はありません。
+  </div>
+</section>
+
+<!-- ============ Ch.4-1 全身観察 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 4</span><span class="name">看護師の視点・医療連携</span></div>
+  <h2>入浴は「全身をみる場」です</h2>
+  <div class="rule"></div>
+  <p class="lead">衣服を脱いだ全身を、明るい場所で、毎回。これは在宅の中で数少ない機会です。</p>
+  <div class="cols">
+    <div class="card">
+      <h4>早期発見できるもの</h4>
+      <ul class="plain">
+        <li>仙骨部・踵部の<b>褥瘡の発赤（d1段階）</b></li>
+        <li>下腿・足背の<b>浮腫の増悪</b></li>
+        <li>白癬・湿疹・掻破痕・<b>スキンテア</b>（皮膚裂傷）</li>
+        <li>内出血・打撲痕（転倒や虐待の兆候）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>体格・栄養の把握</h4>
+      <ul class="plain">
+        <li>脱衣時の<b>体型変化・筋肉量の減少</b></li>
+        <li>骨突出の進行（褥瘡リスクの上昇）</li>
+        <li>皮膚の乾燥・ツルゴール低下（脱水傾向）</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h4 class="g">その日のうちに共有</h4>
+      <ul class="plain">
+        <li>主治医へ<b>創部の状態を報告</b></li>
+        <li>訪問看護師へ<b>処置の申し送り</b></li>
+        <li>ケアマネジャーへ<b>状態変化の連絡</b></li>
+        <li>必要時は<b>写真記録</b>を添えて</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:20px;font-size:21px;"><span class="hl">週1〜2回の入浴は、週1〜2回の全身アセスメントでもあります。</span></p>
+</section>
+
+<!-- ============ Ch.4-2 チーム ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 4</span><span class="name">看護師の視点・医療連携</span></div>
+  <h2>在宅チームの一員として</h2>
+  <div class="rule"></div>
+  <div class="hub">
+    <div class="center">訪問入浴介護<small>看護師1名＋介護2名</small></div>
+    <div class="link">⇄</div>
+    <div class="partners">
+      <div>主治医・在宅医<small>創部・全身状態の報告／指示の確認</small></div>
+      <div>訪問看護ステーション<small>処置内容の共有／訪問日の調整</small></div>
+      <div>ケアマネジャー<small>状態変化・生活課題のフィードバック</small></div>
+      <div>デイサービス・訪問介護<small>入浴日の分担／スキンケアの継続</small></div>
+    </div>
+  </div>
+  <div class="cols" style="margin-top:12px;">
+    <div class="card">
+      <h4>「競合」ではありません</h4>
+      <p>デイサービスに通えている間はデイでの入浴を。<b>体調やADLの低下で通所が難しくなった時期</b>に、訪問入浴が引き継ぐ——という補完関係です。</p>
+    </div>
+    <div class="card green">
+      <h4 class="g">併用が最も現実的</h4>
+      <p>「デイ入浴＋訪問入浴」「訪問看護の処置＋訪問入浴のスキンケア」。<b>役割を分け合うことで在宅の限界点が延びます。</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Ch.5 介護報酬 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 5</span><span class="name">介護報酬</span></div>
+  <h2>単位数と主な加算</h2>
+  <div class="rule" style="margin-bottom:16px;"></div>
+  <div class="cols" style="gap:30px;">
+    <div style="flex:1.15;">
+      <table class="fee">
+        <thead><tr><th>サービス</th><th>単位数</th></tr></thead>
+        <tbody>
+          <tr class="own"><td><b>訪問入浴介護費</b><br><small>看護師1＋介護2の3名体制・全身浴</small></td><td class="n">1,266<small> 単位/回</small></td></tr>
+          <tr><td>清拭<small>（身体介護2・30〜60分）</small></td><td class="n">387<small> 単位/回</small></td></tr>
+          <tr><td>清拭<small>（身体介護3・1時間以上）</small></td><td class="n">567<small> 単位/回</small></td></tr>
+          <tr class="grp"><td>主な加算</td><td>単位数</td></tr>
+          <tr><td>看取り連携体制加算<span class="badge-new">2024年新設</span></td><td class="n">64<small> 単位</small></td></tr>
+          <tr><td>認知症専門ケア加算（Ⅰ）</td><td class="n">3<small> 単位/日</small></td></tr>
+          <tr><td>認知症専門ケア加算（Ⅱ）</td><td class="n">4<small> 単位/日</small></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;font-size:15px;color:var(--sub);">※2024年4月改定後の単位数。単価は地域区分により異なります。</p>
+    </div>
+    <div style="flex:1;">
+      <div class="card green" style="height:100%;box-sizing:border-box;">
+        <h4 class="g">単位数をどう読むか</h4>
+        <p style="font-size:19px;">確かに1回あたりの単位数は高い。しかしこの1,266単位には——</p>
+        <ul class="plain" style="margin-top:12px;">
+          <li><b>3名（うち看護師1名）</b>が同時に訪問</li>
+          <li>専用浴槽・給湯設備の<b>持ち込みと設置</b></li>
+          <li>清拭では届かない<b>全身浴・洗髪</b></li>
+          <li>毎回の<b>バイタル測定と全身観察</b></li>
+          <li>関係職種への<b>情報共有</b></li>
+        </ul>
+        <p style="margin-top:14px;font-size:19px;"><span class="hl">入浴のみの報酬ではなく、看護アセスメントを含んだ包括的なケアの対価</span>としてご検討ください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Ch.6 声 ============ -->
+<section>
+  <div class="chapter"><span class="num">CHAPTER 6</span><span class="name">利用者・ご家族の声</span></div>
+  <h2>現場で聞かれる言葉</h2>
+  <div class="rule"></div>
+  <div class="voice">
+    <div class="q">「毎週のお風呂が楽しみで、<br>それだけで気持ちが前向きになります。」</div>
+    <div class="who">80代・要介護4・ご本人</div>
+  </div>
+  <div class="voice">
+    <div class="q">「一人では絶対に無理でした。プロに任せることで、<br>私も安心して介護できるようになりました。」</div>
+    <div class="who">60代・ご家族（介護者）</div>
+  </div>
+  <p style="margin-top:20px;font-size:21px;color:var(--sub);">
+    入浴の効果は、清潔だけにとどまりません。<span class="hl">ご本人の意欲と、介護するご家族の負担軽減</span>——その両方に届くケアです。
+  </p>
+</section>
+
+<!-- ============ まとめ ============ -->
+<section>
+  <div class="chapter"><span class="num">SUMMARY</span><span class="name">まとめ</span></div>
+  <h2>訪問入浴介護が担う役割</h2>
+  <div class="rule"></div>
+  <ul class="plain" style="font-size:23px;">
+    <li><b>入浴困難の「空白地帯」を埋める</b>——デイに通えず、清拭では足りない方の受け皿。</li>
+    <li><b>「自宅で・全身浴を・看護師付きで・重度でも」の4条件を唯一満たす</b>サービス。</li>
+    <li><b>週1〜2回の全身アセスメントの場</b>——褥瘡・浮腫・栄養状態の変化を早期に捉える。</li>
+    <li><b>在宅チームへの情報のハブ</b>——主治医・訪問看護・ケアマネジャーへその日のうちに共有。</li>
+  </ul>
+  <div style="margin-top:26px;background:var(--primary);color:#fff;border-radius:12px;padding:24px 28px;font-size:25px;font-weight:700;line-height:1.55;">
+    「もう入浴は難しいかもしれない」と感じた時が、<br>
+    <span style="color:#7EE2BC;">訪問入浴をご検討いただくタイミング</span>です。
+  </div>
+  <p style="margin-top:18px;font-size:19px;color:var(--sub);">
+    導入の可否だけでもご相談ください。状態を伺ったうえで、他サービスとの組み合わせを含めてご提案します。
+  </p>
+</section>
+
+<!-- ============ 連絡先 ============ -->
+<section>
+  <div class="chapter"><span class="num">CONTACT</span><span class="name">連携のご案内</span></div>
+  <h2>連絡先・お問い合わせ</h2>
+  <div class="rule"></div>
+  <div class="contact">
+    <div class="info">
+      <div class="org">アップルハート八幡西<br>訪問入浴センター</div>
+      <dl>
+        <div><dt>担当</dt><dd>冨永　一心（管理者・看護師）</dd></div>
+        <div><dt>TEL</dt><dd class="tel">093-695-7766</dd></div>
+        <div><dt>FAX</dt><dd>093-695-7767</dd></div>
+      </dl>
+    </div>
+    <div class="qr">
+      <div class="box">▣</div>
+      <div>QRコード<br>（お問い合わせ用）</div>
+    </div>
+  </div>
+  <div class="closing">まずはご相談から。お気軽にどうぞ。</div>
+  <p style="margin-top:16px;font-size:18px;color:var(--sub);text-align:center;">
+    初回アセスメントは無料でお伺いします。導入の可否判断からお手伝いします。
+  </p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+  // reveal.js 4系は ?print-pdf を Reveal 側で検出し、印刷用レイアウトへ切り替える。
+  // 追加のスタイルシート読み込みは不要（3系のような手動注入は行わない）。
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    minScale: 0.2,
+    maxScale: 1.5,
+    hash: true,
+    slideNumber: 'c/t',
+    controls: true,
+    progress: true,
+    center: false,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    pdfSeparateFragments: false
+  });
+</script>
+</body>
+</html>

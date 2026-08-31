@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>訪問入浴介護 サービス案内 — アップルハート八幡西訪問入浴センター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1A5276;
+  --secondary:#1D9E75;
+  --accent:#2E86C1;
+  --text:#1C2833;
+  --sub:#566573;
+  --gray:#BDC3C7;
+  --amber:#F39C12;
+  --line:#DCE3E8;
+  --tint:#F4F8FA;
+  --tint-green:#EAF7F1;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+  font-size:10pt;
+  line-height:1.5;
+  color:var(--text);
+  background:#E8ECEF;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ===== A4ページ ===== */
+.page{
+  width:210mm;
+  min-height:297mm;
+  margin:8mm auto;
+  padding:9mm 12mm 7mm;
+  background:#fff;
+  box-shadow:0 2px 12px rgba(0,0,0,.14);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+.page + .page{ page-break-before:always; break-before:page; }
+
+/* ===== ヘッダー ===== */
+.head{
+  border-bottom:3px solid var(--primary);
+  padding-bottom:4.5mm;
+  margin-bottom:4.5mm;
+}
+.head .eyebrow{
+  color:var(--secondary);
+  font-size:8.5pt;
+  font-weight:700;
+  letter-spacing:.14em;
+  margin-bottom:1.2mm;
+}
+.head h1{
+  margin:0;
+  font-size:17.5pt;
+  font-weight:900;
+  color:var(--primary);
+  letter-spacing:.02em;
+  line-height:1.3;
+}
+.head .sub{
+  margin-top:1.8mm;
+  font-size:10pt;
+  font-weight:500;
+  color:var(--text);
+}
+
+/* 裏面ヘッダー（コンパクト） */
+.head.small{ padding-bottom:3.5mm; margin-bottom:4mm; }
+.head.small h1{ font-size:14pt; }
+.head.small .pageno{
+  position:absolute; right:12mm; top:10mm;
+  font-size:8.5pt; color:var(--sub); font-weight:600;
+}
+
+/* ===== セクション ===== */
+.sec{ margin-bottom:3mm; }
+.sec > h2{
+  margin:0 0 2mm;
+  background:var(--primary);
+  color:#fff;
+  font-size:10.5pt;
+  font-weight:700;
+  letter-spacing:.03em;
+  padding:1.2mm 3.5mm;
+  border-radius:2px;
+  display:flex;
+  align-items:baseline;
+  gap:3mm;
+}
+.sec > h2 .n{
+  font-size:8pt;
+  font-weight:700;
+  opacity:.75;
+  letter-spacing:.1em;
+}
+.sec p{ margin:0 0 2mm; }
+.sec p:last-child{ margin-bottom:0; }
+strong{ color:var(--secondary); font-weight:700; }
+.muted{ color:var(--sub); font-size:9pt; }
+
+/* ===== 対象者リスト ===== */
+.targets{
+  list-style:none; margin:0; padding:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5mm 4mm;
+}
+.targets li{
+  position:relative;
+  padding:1.2mm 2mm 1.2mm 7.5mm;
+  background:var(--tint-green);
+  border-radius:2px;
+  font-size:10pt;
+  font-weight:500;
+}
+.targets li::before{
+  content:"✓";
+  position:absolute;
+  left:2.5mm; top:1.1mm;
+  color:var(--secondary);
+  font-weight:900;
+  font-size:11pt;
+}
+
+/* ===== 比較表 ===== */
+table.cmp{
+  width:100%;
+  border-collapse:collapse;
+  font-size:9pt;
+}
+table.cmp th, table.cmp td{
+  border:1px solid var(--line);
+  padding:0.9mm 2mm;
+  text-align:center;
+}
+table.cmp thead th{
+  background:var(--primary);
+  color:#fff;
+  font-weight:700;
+  font-size:9pt;
+  border-color:var(--primary);
+}
+table.cmp thead th.own{ background:var(--secondary); border-color:var(--secondary); }
+table.cmp tbody th{
+  text-align:left;
+  background:var(--tint);
+  font-weight:600;
+  width:34%;
+}
+table.cmp td.own{ background:var(--tint-green); }
+.mk{ font-weight:900; font-size:12pt; line-height:1; }
+.ok{ color:var(--secondary); }
+.no{ color:var(--gray); }
+.tri{ color:var(--amber); }
+.legend{ margin-top:1.5mm; font-size:8.5pt; color:var(--sub); }
+.legend span{ margin-right:5mm; }
+
+/* ===== フロー ===== */
+.flow{ display:flex; align-items:stretch; }
+.flow .step{
+  flex:1;
+  background:var(--tint);
+  border-top:1.2mm solid var(--accent);
+  border-radius:2px;
+  padding:1.5mm 1mm;
+  text-align:center;
+}
+.flow .step.g{ background:var(--tint-green); border-top-color:var(--secondary); }
+.flow .step .t{ font-size:9pt; font-weight:700; color:var(--primary); line-height:1.35; }
+.flow .step .d{ font-size:7.5pt; color:var(--sub); margin-top:.8mm; line-height:1.4; }
+.flow .arw{
+  display:flex; align-items:center; justify-content:center;
+  width:4mm; color:var(--gray); font-weight:700; font-size:10pt;
+}
+
+/* ===== 単位数表 ===== */
+table.fee{ width:100%; border-collapse:collapse; font-size:9.5pt; }
+table.fee th, table.fee td{
+  border:1px solid var(--line);
+  padding:1.1mm 3mm;
+  text-align:left;
+}
+table.fee thead th{
+  background:var(--primary); color:#fff; font-weight:700; font-size:9.5pt;
+  border-color:var(--primary);
+}
+table.fee thead th:last-child, table.fee td.n{ text-align:right; }
+table.fee td.n{ font-weight:700; color:var(--primary); white-space:nowrap; }
+table.fee td.n small{ font-weight:400; color:var(--sub); font-size:8pt; }
+table.fee tr.own td{ background:var(--tint-green); }
+table.fee tr.own td.n{ color:var(--secondary); font-size:11.5pt; }
+table.fee td small.d{ display:block; color:var(--sub); font-size:8pt; line-height:1.4; }
+.badge-new{
+  background:var(--amber); color:#fff; font-size:7.5pt; font-weight:700;
+  padding:.3mm 1.6mm; border-radius:1.5px; margin-left:2mm; vertical-align:1px;
+  white-space:nowrap;
+}
+
+/* ===== 看護師の視点 ===== */
+.nurse{ display:flex; gap:4mm; }
+.nurse .box{
+  flex:1;
+  background:var(--tint);
+  border-left:1.2mm solid var(--primary);
+  border-radius:0 2px 2px 0;
+  padding:2mm 2.5mm;
+}
+.nurse .box.g{ background:var(--tint-green); border-left-color:var(--secondary); }
+.nurse .box h3{ margin:0 0 1.5mm; font-size:10pt; color:var(--primary); font-weight:700; }
+.nurse .box.g h3{ color:var(--secondary); }
+.nurse ul{ margin:0; padding-left:4.5mm; font-size:9pt; }
+.nurse li{ margin-bottom:.8mm; }
+
+/* ===== Q&A ===== */
+.qa{ border-top:1px solid var(--line); padding:1.3mm 0; }
+.qa:first-of-type{ border-top:none; padding-top:0; }
+.qa .q, .qa .a{ display:flex; gap:2.5mm; align-items:flex-start; }
+.qa .q{ margin-bottom:.8mm; }
+.qa .mark{
+  flex:none;
+  width:5mm; height:5mm;
+  border-radius:50%;
+  color:#fff; font-weight:900; font-size:9pt;
+  display:flex; align-items:center; justify-content:center;
+  line-height:1;
+}
+.qa .q .mark{ background:var(--primary); }
+.qa .a .mark{ background:var(--secondary); }
+.qa .q .txt{ font-weight:700; color:var(--primary); font-size:10pt; padding-top:.4mm; }
+.qa .a .txt{ font-size:9.5pt; padding-top:.4mm; }
+
+/* ===== フッター（連絡先） ===== */
+.contact{
+  margin-top:auto;
+  border:1.2mm solid var(--primary);
+  border-radius:3px;
+  padding:2.5mm 3.5mm;
+  display:flex;
+  gap:5mm;
+  align-items:center;
+}
+.contact .info{ flex:1; }
+.contact .info .org{
+  font-size:12pt; font-weight:900; color:var(--primary); line-height:1.3;
+}
+.contact .info dl{ margin:2mm 0 0; font-size:9.5pt; }
+.contact .info dl div{ display:flex; gap:3mm; padding:.5mm 0; }
+.contact .info dt{
+  flex:none; width:16mm; color:#fff; background:var(--sub);
+  font-size:8pt; font-weight:700; text-align:center; border-radius:1.5px;
+  padding:.4mm 0; height:fit-content; margin-top:.9mm;
+}
+.contact .info dd{ margin:0; font-weight:700; }
+.contact .info dd.tel{ font-size:13.5pt; color:var(--secondary); line-height:1.25; }
+.qr{
+  flex:none;
+  width:21mm; height:21mm;
+  border:.8mm dashed var(--gray);
+  border-radius:2px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  color:var(--sub); font-size:7pt; text-align:center; gap:1mm;
+}
+.qr .box{ font-size:15pt; color:var(--gray); }
+.closing{
+  margin-top:2mm;
+  background:var(--secondary);
+  color:#fff;
+  text-align:center;
+  font-size:10pt;
+  font-weight:700;
+  padding:1.6mm;
+  border-radius:2px;
+}
+.footnote{
+  margin-top:1.8mm;
+  font-size:7.5pt;
+  color:var(--sub);
+  text-align:center;
+}
+
+/* ===== 印刷 ===== */
+@page{ size:A4 portrait; margin:0; }
+@media print{
+  body{ background:#fff; }
+  .page{
+    width:210mm;
+    height:297mm;
+    min-height:297mm;
+    margin:0;
+    box-shadow:none;
+    page-break-after:always;
+    break-after:page;
+  }
+  .page:last-child{ page-break-after:auto; break-after:auto; }
+  .sec, .qa, table, .contact{ break-inside:avoid; page-break-inside:avoid; }
+  .screen-note{ display:none !important; }
+}
+
+.screen-note{
+  max-width:210mm;
+  margin:6mm auto 0;
+  font-size:9pt;
+  color:var(--sub);
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 表面 ================= -->
+<div class="page">
+
+  <div class="head">
+    <div class="eyebrow">介護保険サービス／地域在宅医療連携のご案内</div>
+    <h1>訪問入浴介護　サービス案内</h1>
+    <div class="sub">在宅で入浴が困難な方へ、専門チームがお伺いします。</div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">01</span>訪問入浴介護とは</h2>
+    <p><strong>看護師1名＋介護スタッフ2名</strong>の3名チームが、専用の組立式浴槽を車両で持参してご自宅を訪問し、居室で<strong>全身浴</strong>を提供する介護保険サービスです。</p>
+    <p>浴室の広さや段差にかかわらず、ベッドサイドに約2畳のスペースがあれば実施できます。入浴前後は看護師がバイタルと全身状態を確認して入浴可否を判断し、異常があれば清拭・部分浴へ切り替えて主治医・ケアマネジャーへ報告します。</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">02</span>こんな方にご利用いただけます</h2>
+    <ul class="targets">
+      <li>寝たきり・重度要介護の方</li>
+      <li>自宅の浴室での入浴が困難な方</li>
+      <li>デイサービスへの通所が難しい方</li>
+      <li>外出が体調的に困難な方</li>
+      <li>一人暮らしで介助者がいない方</li>
+      <li>ご家族だけでの入浴介助に限界がある方</li>
+    </ul>
+    <p class="muted" style="margin-top:1.5mm;">※気管切開・経管栄養・在宅酸素等をご利用の方も、主治医の許可があれば対応できるケースが多くあります。</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">03</span>入浴支援サービスの比較</h2>
+    <table class="cmp">
+      <thead>
+        <tr><th>項目</th><th class="own">訪問入浴</th><th>デイ入浴</th><th>清拭・部分浴</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+        <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
+        <tr><th>移動・外出が不要</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+        <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
+      </tbody>
+    </table>
+    <div class="legend">
+      <span><b class="ok">✓</b> 対応できる</span>
+      <span><b class="tri">△</b> 事業所・状態により異なる</span>
+      <span><b class="no">✕</b> 対応が難しい</span>
+    </div>
+    <p style="margin-top:2mm;font-size:10pt;"><strong>「自宅で・全身浴を・看護師付きで・重度でも」</strong>——この4条件を同時に満たせるのは訪問入浴介護だけです。</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">04</span>サービスの流れ（滞在およそ45〜60分）</h2>
+    <div class="flow">
+      <div class="step"><div class="t">到着</div><div class="d">ご挨拶・<br>当日の体調確認</div></div>
+      <div class="arw">›</div>
+      <div class="step"><div class="t">設置</div><div class="d">浴槽の組立<br>10〜15分</div></div>
+      <div class="arw">›</div>
+      <div class="step g"><div class="t">バイタル確認</div><div class="d">看護師が<br>入浴可否を判断</div></div>
+      <div class="arw">›</div>
+      <div class="step g"><div class="t">入　浴</div><div class="d">全身浴・洗髪<br>20〜30分</div></div>
+      <div class="arw">›</div>
+      <div class="step g"><div class="t">スキンケア</div><div class="d">保湿・軟膏塗布<br>褥瘡処置</div></div>
+      <div class="arw">›</div>
+      <div class="step"><div class="t">記録・連絡</div><div class="d">連絡ノート記載<br>関係職種へ報告</div></div>
+    </div>
+    <p class="muted" style="margin-top:1.5mm;">※給湯は車両または屋内の給湯設備から。床・寝具の養生と原状復帰までスタッフが対応し、ご家族が介助に入る必要はありません。</p>
+  </div>
+
+  <div class="contact">
+    <div class="info">
+      <div class="org">アップルハート八幡西訪問入浴センター</div>
+      <dl>
+        <div><dt>TEL</dt><dd class="tel">093-695-7766</dd></div>
+        <div><dt>FAX</dt><dd>093-695-7767</dd></div>
+        <div><dt>担当</dt><dd>冨永　一心（管理者・看護師）</dd></div>
+      </dl>
+    </div>
+    <div class="qr">
+      <div class="box">▣</div>
+      <div>QRコード<br>お問い合わせ</div>
+    </div>
+  </div>
+  <div class="closing">まずはご相談から。お気軽にどうぞ。</div>
+
+</div>
+
+<!-- ================= 裏面 ================= -->
+<div class="page">
+
+  <div class="head small">
+    <div class="pageno">訪問入浴介護　サービス案内 ／ 裏面</div>
+    <div class="eyebrow">介護報酬・看護連携・よくあるご質問</div>
+    <h1>ご依頼にあたって</h1>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">05</span>介護報酬・単位数</h2>
+    <table class="fee">
+      <thead><tr><th>サービス</th><th>単位数</th></tr></thead>
+      <tbody>
+        <tr class="own">
+          <td><b>訪問入浴介護費</b><small class="d">看護師1名＋介護スタッフ2名の3名体制・専用浴槽持参・全身浴</small></td>
+          <td class="n">1,266<small> 単位／回</small></td>
+        </tr>
+        <tr><td>清拭<span class="muted">（身体介護2・30分以上1時間未満）</span></td><td class="n">387<small> 単位／回</small></td></tr>
+        <tr><td>清拭<span class="muted">（身体介護3・1時間以上1時間30分未満）</span></td><td class="n">567<small> 単位／回</small></td></tr>
+      </tbody>
+    </table>
+
+    <table class="fee" style="margin-top:2mm;">
+      <thead><tr><th>主な加算</th><th>単位数</th></tr></thead>
+      <tbody>
+        <tr><td>看取り連携体制加算<span class="badge-new">2024年新設</span></td><td class="n">64<small> 単位</small></td></tr>
+        <tr><td>認知症専門ケア加算（Ⅰ）</td><td class="n">3<small> 単位／日</small></td></tr>
+        <tr><td>認知症専門ケア加算（Ⅱ）</td><td class="n">4<small> 単位／日</small></td></tr>
+      </tbody>
+    </table>
+    <p class="muted" style="margin-top:1.5mm;">※2024年4月介護報酬改定後の単位数。1単位あたりの単価は地域区分により異なります。</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">06</span>看護師の視点 ── 入浴は「全身観察の機会」です</h2>
+    <div class="nurse">
+      <div class="box">
+        <h3>毎回のアセスメント</h3>
+        <ul>
+          <li>仙骨部・踵部の<b>褥瘡の発赤を初期段階で発見</b></li>
+          <li>下腿・足背の<b>浮腫の増悪</b>を経時的に把握</li>
+          <li>白癬・湿疹・スキンテア（皮膚裂傷）の確認</li>
+          <li>骨突出の進行、皮膚の乾燥・脱水傾向、転倒の痕跡</li>
+        </ul>
+      </div>
+      <div class="box g">
+        <h3>在宅チームへの情報提供</h3>
+        <ul>
+          <li><b>主治医</b>へ創部の状態を報告、指示を確認</li>
+          <li><b>訪問看護師</b>へ処置内容を申し送り</li>
+          <li><b>ケアマネジャー</b>へ状態変化・生活課題を連絡</li>
+          <li>入浴中止時も、その理由を必ずご報告</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:2mm;font-size:9.5pt;">週1〜2回の入浴は、<strong>週1〜2回の全身アセスメント</strong>でもあります。デイサービスや訪問看護とは競合せず、<strong>役割を分け合う補完関係</strong>としてご活用ください。</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="n">07</span>よくあるご質問</h2>
+
+    <div class="qa">
+      <div class="q"><span class="mark">Q</span><span class="txt">どんな状態の方が利用できますか？</span></div>
+      <div class="a"><span class="mark">A</span><span class="txt">要介護1〜5の認定を受けた方が対象です。寝たきりの方、気管切開・経管栄養中の方でも、主治医の許可があれば対応できるケースが多くあります。</span></div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="mark">Q</span><span class="txt">費用はどのくらいかかりますか？</span></div>
+      <div class="a"><span class="mark">A</span><span class="txt">介護保険適用で、1割負担の方は1回あたり約1,000〜1,300円が目安です。</span></div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="mark">Q</span><span class="txt">緊急時の対応はどうなりますか？</span></div>
+      <div class="a"><span class="mark">A</span><span class="txt">看護師が同行しているため、その場で判断・対応します。必要時は主治医・119番に連絡します。</span></div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="mark">Q</span><span class="txt">ケアマネジャーとして、どう依頼すればいいですか？</span></div>
+      <div class="a"><span class="mark">A</span><span class="txt">ケアプランに位置づけ後、お電話またはFAXでご連絡ください。初回アセスメントは無料で伺います。</span></div>
+    </div>
+  </div>
+
+  <div class="contact">
+    <div class="info">
+      <div class="org">アップルハート八幡西訪問入浴センター</div>
+      <dl>
+        <div><dt>TEL</dt><dd class="tel">093-695-7766</dd></div>
+        <div><dt>FAX</dt><dd>093-695-7767</dd></div>
+        <div><dt>担当</dt><dd>冨永　一心（管理者・看護師）</dd></div>
+      </dl>
+    </div>
+    <div class="qr">
+      <div class="box">▣</div>
+      <div>QRコード<br>お問い合わせ</div>
+    </div>
+  </div>
+  <div class="closing">まずはご相談から。お気軽にどうぞ。</div>
+
+</div>
+
+<p class="screen-note">この画面は印刷レイアウトのプレビューです。Ctrl+P（Mac は Cmd+P）で A4 両面印刷できます。<br>印刷設定で「背景のグラフィック」を有効にし、余白を「なし」に設定してください。</p>
+
+</body>
+</html>
