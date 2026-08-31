@@ -212,6 +212,12 @@ table.cmp tbody th{
 }
 table.cmp td.own{ background:var(--tint-green); font-weight:700; }
 table.cmp tbody tr:last-child th{ border-radius:0 0 0 8px; }
+/* 5サービス比較（列が増えるぶん詰める） */
+table.cmp.five{ font-size:17px; }
+table.cmp.five th, table.cmp.five td{ padding:8px 6px; }
+table.cmp.five thead th{ font-size:16px; }
+table.cmp.five tbody th{ font-size:17px; width:26%; padding-left:14px; }
+table.cmp.five .mk{ font-size:22px; }
 .mk{ font-size:26px; font-weight:900; line-height:1; }
 .ok{ color:var(--secondary); }
 .no{ color:var(--gray); }
@@ -433,9 +439,9 @@ table.fee tr.grp td:last-child{ text-align:right; }
   <div class="cols">
     <div class="card">
       <span class="kicker gray">選択肢 1</span>
-      <h4>訪問介護（清拭・部分浴）</h4>
-      <p>自宅で受けられ、導入しやすい。</p>
-      <p class="note"><b>限界：</b>全身浴ではなく洗髪・背部が不十分。温熱効果が得られない。看護職の観察が入らない。</p>
+      <h4>訪問介護・訪問看護での入浴介助</h4>
+      <p>自宅の浴室を使い、ヘルパーや看護師が介助。清拭・部分浴も含みます。</p>
+      <p class="note"><b>限界：</b>浴室の広さ・段差に左右され、原則1名対応。全介助や寝たきりの方は難しい。清拭では洗髪・背部と温熱効果が得られない。</p>
     </div>
     <div class="card">
       <span class="kicker gray">選択肢 2</span>
@@ -459,31 +465,35 @@ table.fee tr.grp td:last-child{ text-align:right; }
 <!-- ============ Ch.2-1 比較表 ============ -->
 <section>
   <div class="chapter"><span class="num">CHAPTER 2</span><span class="name">比較・差別化</span></div>
-  <h2>3つの入浴支援を比べる</h2>
+  <h2>5つの入浴支援を比べる</h2>
   <div class="rule" style="margin-bottom:14px;"></div>
-  <table class="cmp">
+  <table class="cmp five">
     <thead>
       <tr>
         <th>項目</th>
         <th class="own">訪問入浴</th>
+        <th>訪問看護</th>
+        <th>訪問介護</th>
         <th>デイ入浴</th>
         <th>清拭・部分浴</th>
       </tr>
     </thead>
     <tbody>
-      <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
-      <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
-      <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
-      <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
-      <tr><th>移動・外出が不要</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
-      <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
-      <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+      <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk tri">△</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>浴室の環境に左右されない</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td></tr>
+      <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>複数名での移乗介助</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
+      <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+      <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
     </tbody>
   </table>
   <div class="legend">
     <span><b class="ok">✓</b> 対応できる</span>
     <span><b class="tri">△</b> 事業所・状態により異なる</span>
     <span><b class="no">✕</b> 対応が難しい</span>
+    <div style="margin-top:8px;font-size:14px;">※「訪問看護」「訪問介護」欄は<b>自宅の浴室での入浴介助</b>を指します。清拭・部分浴はサービス種別を問わず実施される方法です。</div>
   </div>
 </section>
 

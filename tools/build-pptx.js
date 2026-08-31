@@ -99,7 +99,7 @@ s.addNotes('入浴困難は「できない理由」が複数重なって起こ�
 s=pres.addSlide();
 header(s,'CHAPTER 1','課題提起','入浴支援の選択肢と、その限界');
 const w3=(CW-0.44)/3;
-card(s,{x:M,y:1.66,w:w3,h:3.1,fill:TINT,title:'① 訪問介護（清拭）',body:'自宅で受けられ、導入しやすい。\n\n**限界：**全身浴ではなく洗髪・背部が不十分。温熱効果が得られず、看護職の観察も入らない。',fontSize:12.5});
+card(s,{x:M,y:1.66,w:w3,h:3.1,fill:TINT,title:'① 訪問介護・訪問看護',body:'自宅の浴室を使い、ヘルパーや看護師が介助。清拭・部分浴も含む。\n\n**限界：**浴室環境に左右され原則1名対応。全介助や寝たきりの方は難しい。',fontSize:12.5});
 card(s,{x:M+w3+0.22,y:1.66,w:w3,h:3.1,fill:TINT,title:'② デイサービス入浴',body:'週複数回、社会参加とあわせて実施できる。\n\n**限界：**通所という外出が前提。寝たきり・全介助・医療的ケアがあると受け入れ困難。',fontSize:12.5});
 card(s,{x:M+2*(w3+0.22),y:1.66,w:w3,h:3.1,fill:TG,title:'③ 訪問入浴介護',titleColor:S,body:'専用浴槽を持ち込み、自宅で全身浴を提供。\n\n**特徴：**看護師同行で重度でも対応可。移動の負担がゼロ。',fontSize:12.5});
 s.addShape(pres.ShapeType.roundRect,{x:M,y:5.02,w:CW,h:0.92,fill:{color:'FDF3E3'},rectRadius:0.06,line:{color:'FDF3E3'}});
@@ -110,24 +110,33 @@ s.addNotes('3つの選択肢それぞれに限界があること、そしてそ�
 
 /* ---------- 4. Ch2-1 比較表 ---------- */
 s=pres.addSlide();
-header(s,'CHAPTER 2','比較・差別化','3つの入浴支援を比べる');
-const mk=(c,col)=>({text:c,options:{fontFace:F,fontSize:18,bold:true,color:col,align:'center',valign:'middle'}});
-const OK=()=>mk('✓',S), NO=()=>mk('✕',GY), TR=()=>mk('△',AM);
-const hdr=t=>({text:t,options:{fontFace:F,fontSize:13,bold:true,color:WH,align:'center',valign:'middle',fill:{color:P}}});
-const hdrOwn=t=>({text:t,options:{fontFace:F,fontSize:13,bold:true,color:WH,align:'center',valign:'middle',fill:{color:S}}});
-const lbl=t=>({text:t,options:{fontFace:F,fontSize:13,bold:true,color:TX,align:'left',valign:'middle',fill:{color:TINT}}});
+header(s,'CHAPTER 2','比較・差別化','5つの入浴支援を比べる');
+const mk=(c,col)=>({text:c,options:{fontFace:F,fontSize:15,bold:true,color:col,align:'center',valign:'middle'}});
+const OK=()=>mk('\u2713',S), NO=()=>mk('\u2715',GY), TR=()=>mk('\u25B3',AM);
+const hdr=t=>({text:t,options:{fontFace:F,fontSize:11,bold:true,color:WH,align:'center',valign:'middle',fill:{color:P}}});
+const hdrOwn=t=>({text:t,options:{fontFace:F,fontSize:11,bold:true,color:WH,align:'center',valign:'middle',fill:{color:S}}});
+const lbl=t=>({text:t,options:{fontFace:F,fontSize:11.5,bold:true,color:TX,align:'left',valign:'middle',fill:{color:TINT}}});
 const own=m=>({...m,options:{...m.options,fill:{color:TG}}});
-const rowsData=[['自宅で受けられる',OK,NO,OK],['全身浴ができる',OK,OK,NO],['看護師が同行',OK,TR,NO],
-  ['重度・寝たきり対応',OK,NO,TR],['移動・外出が不要',OK,NO,OK],['バイタル・皮膚観察',OK,TR,NO],['在宅チームへ情報共有',OK,NO,NO]];
-const tbl=[[hdr('項目'),hdrOwn('訪問入浴'),hdr('デイ入浴'),hdr('清拭・部分浴')]];
-rowsData.forEach(r=>tbl.push([lbl(r[0]),own(r[1]()),r[2](),r[3]()]));
-s.addTable(tbl,{x:M,y:1.62,w:CW,colW:[3.9,2.75,2.75,2.71],rowH:0.44,
+const rowsData=[
+ ['自宅で受けられる',        OK,OK ,OK ,NO ,OK ],
+ ['全身浴ができる',          OK,TR ,TR ,OK ,NO ],
+ ['浴室の環境に左右されない',OK,NO ,NO ,OK ,OK ],
+ ['看護師が同行',            OK,OK ,NO ,TR ,NO ],
+ ['複数名での移乗介助',      OK,NO ,NO ,OK ,NO ],
+ ['重度・寝たきり対応',      OK,TR ,NO ,NO ,TR ],
+ ['バイタル・皮膚観察',      OK,OK ,NO ,TR ,NO ],
+ ['在宅チームへ情報共有',    OK,OK ,TR ,NO ,NO ]];
+const tbl=[[hdr('項目'),hdrOwn('訪問入浴'),hdr('訪問看護'),hdr('訪問介護'),hdr('デイ入浴'),hdr('清拭・部分浴')]];
+rowsData.forEach(r=>tbl.push([lbl(r[0]),own(r[1]()),r[2](),r[3](),r[4](),r[5]()]));
+s.addTable(tbl,{x:M,y:1.58,w:CW,colW:[3.3,1.82,1.75,1.75,1.75,1.71],rowH:0.36,
   border:{type:'solid',color:'E5E9EC',pt:1},fontFace:F,valign:'middle'});
-s.addText([{text:'✓ 対応できる',options:{fontFace:F,fontSize:11,color:S}},
-  {text:'　　△ 事業所・状態により異なる',options:{fontFace:F,fontSize:11,color:AM}},
-  {text:'　　✕ 対応が難しい',options:{fontFace:F,fontSize:11,color:SUB}}],
-  {x:M,y:5.42,w:CW,h:0.3,isTextBox:true,margin:0});
-s.addNotes('この表が本日の中心です。訪問入浴の列だけがすべて丸になる、という点に注目してください。');
+s.addText([{text:'\u2713 対応できる',options:{fontFace:F,fontSize:10.5,color:S}},
+  {text:'\u3000\u3000\u25B3 事業所・状態により異なる',options:{fontFace:F,fontSize:10.5,color:AM}},
+  {text:'\u3000\u3000\u2715 対応が難しい',options:{fontFace:F,fontSize:10.5,color:SUB,breakLine:true}},
+  {text:'\u203B「訪問看護」「訪問介護」欄は自宅の浴室での入浴介助を指します。清拭・部分浴はサービス種別を問わず実施される方法です。',
+   options:{fontFace:F,fontSize:10,color:SUB}}],
+  {x:M,y:4.72,w:CW,h:0.7,lineSpacingMultiple:1.4,isTextBox:true,margin:0});
+s.addNotes('この表が本日の中心です。訪問看護・訪問介護の入浴介助も比較に入れました。訪問入浴の違いは、専用浴槽を持参するため浴室環境に左右されない点と、3名体制で移乗できる点です。');
 
 /* ---------- 5. Ch2-2 4条件 ---------- */
 s=pres.addSlide();

@@ -83,7 +83,7 @@ body{
 }
 
 /* ===== セクション ===== */
-.sec{ margin-bottom:1.8mm; }
+.sec{ margin-bottom:1.5mm; }
 .sec > h2{
   margin:0 0 2mm;
   background:var(--primary);
@@ -158,6 +158,11 @@ table.cmp tbody th{
   width:34%;
 }
 table.cmp td.own{ background:var(--tint-green); }
+table.cmp.five{ font-size:8pt; }
+table.cmp.five th, table.cmp.five td{ padding:.7mm 1mm; }
+table.cmp.five thead th{ font-size:8pt; }
+table.cmp.five tbody th{ width:27%; font-size:8.5pt; padding-left:2mm; }
+table.cmp.five .mk{ font-size:10.5pt; }
 .mk{ font-weight:900; font-size:12pt; line-height:1; }
 .ok{ color:var(--secondary); }
 .no{ color:var(--gray); }
@@ -341,8 +346,7 @@ table.fee tr.grp td:last-child{ text-align:right; }
 
   <div class="sec">
     <h2><span class="n">01</span>訪問入浴介護とは</h2>
-    <p><strong>看護師1名＋介護スタッフ2名</strong>の3名チームが、専用の組立式浴槽を車両で持参してご自宅を訪問し、居室で<strong>全身浴</strong>を提供する介護保険サービスです。</p>
-    <p>ベッドサイドに約2畳のスペースがあれば、浴室の広さや段差にかかわらず実施できます。入浴前後は看護師が入浴可否を判断し、異常があれば清拭・部分浴へ切り替えて主治医・ケアマネジャーへ報告します。</p>
+    <p><strong>看護師1名＋介護スタッフ2名</strong>の3名チームが、専用の組立式浴槽を車両で持参してご自宅を訪問し、居室で<strong>全身浴</strong>を提供する介護保険サービスです。ベッドサイドに約2畳のスペースがあれば、浴室の広さや段差にかかわらず実施できます。入浴前後は看護師が入浴可否を判断し、異常があれば清拭・部分浴へ切り替えて関係職種へ報告します。</p>
   </div>
 
   <div class="sec">
@@ -360,24 +364,26 @@ table.fee tr.grp td:last-child{ text-align:right; }
 
   <div class="sec">
     <h2><span class="n">03</span>入浴支援サービスの比較</h2>
-    <table class="cmp">
+    <table class="cmp five">
       <thead>
-        <tr><th>項目</th><th class="own">訪問入浴</th><th>デイ入浴</th><th>清拭・部分浴</th></tr>
+        <tr><th>項目</th><th class="own">訪問入浴</th><th>訪問看護</th><th>訪問介護</th><th>デイ入浴</th><th>清拭・部分浴</th></tr>
       </thead>
       <tbody>
-        <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
-        <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
-        <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
-        <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
-        <tr><th>移動・外出が不要</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
-        <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
-        <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>自宅で受けられる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td></tr>
+        <tr><th>全身浴ができる</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk tri">△</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>浴室の環境に左右されない</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td></tr>
+        <tr><th>看護師が同行</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>複数名での移乗介助</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>重度・寝たきり対応</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td></tr>
+        <tr><th>バイタル・皮膚観察</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk no">✕</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td></tr>
+        <tr><th>在宅チームへ情報共有</th><td class="own"><span class="mk ok">✓</span></td><td><span class="mk ok">✓</span></td><td><span class="mk tri">△</span></td><td><span class="mk no">✕</span></td><td><span class="mk no">✕</span></td></tr>
       </tbody>
     </table>
     <div class="legend">
       <span><b class="ok">✓</b> 対応できる</span>
       <span><b class="tri">△</b> 事業所・状態により異なる</span>
       <span><b class="no">✕</b> 対応が難しい</span>
+      <div style="margin-top:.8mm;">※「訪問看護」「訪問介護」欄は<b>自宅の浴室での入浴介助</b>を指します。清拭・部分浴はサービス種別を問わず実施される方法です。</div>
     </div>
     <p style="margin-top:2mm;font-size:10pt;"><strong>「自宅で・全身浴を・看護師付きで・重度でも」</strong>——この4条件を同時に満たせるのは訪問入浴介護だけです。</p>
   </div>
@@ -394,12 +400,12 @@ table.fee tr.grp td:last-child{ text-align:right; }
       <div class="step"><div class="n">15分</div><div class="t">片付け・記録</div>
         <div class="d">更衣・保湿ケア／機材の撤収<br>記録と関係職種への連絡</div></div>
     </div>
-    <p class="muted" style="margin-top:1.5mm;">※給湯は車両または屋内の給湯設備から。床・寝具の養生と原状復帰までスタッフが対応し、ご家族が介助に入る必要はありません。</p>
+    <p class="muted" style="margin-top:1.2mm;">※床・寝具の養生と原状復帰までスタッフが対応し、ご家族が介助に入る必要はありません。</p>
   </div>
 
   <div class="sec">
     <h2><span class="n">05</span>看護師の視点と、訪問看護との役割分担</h2>
-    <p style="margin-bottom:1.5mm;">訪問入浴は介護保険サービスのため<strong>医療行為は行えません</strong>。異常を早期に見つけ、訪問看護・主治医へつなぐのが私たちの役割です。</p>
+    <p style="margin-bottom:1.2mm;">訪問入浴は介護保険サービスのため<strong>医療行為は行えません</strong>。異常を見つけて訪問看護・主治医へつなぐのが役割です。</p>
     <div class="nurse">
       <div class="box g">
         <h3>訪問入浴が担うこと</h3>
