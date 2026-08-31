@@ -258,6 +258,16 @@ table.cmp tbody tr:last-child th{ border-radius:0 0 0 8px; }
 .flow .step .n{
   font-size:13px; font-weight:700; color:var(--sub); letter-spacing:.1em;
 }
+/* 3区分版（各15分） */
+.flow.three .step{ padding:20px 16px; }
+.flow.three .step .n{
+  display:inline-block; background:var(--primary); color:#fff;
+  font-size:15px; letter-spacing:.02em; padding:3px 14px; border-radius:4px; margin-bottom:8px;
+}
+.flow.three .step.g .n{ background:var(--secondary); }
+.flow.three .step .t{ font-size:26px; margin:2px 0 8px; }
+.flow.three .step .d{ font-size:16px; line-height:1.6; }
+.flow.three .arw{ width:36px; font-size:28px; }
 .flow .step .t{ font-size:19px; font-weight:700; color:var(--primary); margin:5px 0 4px; }
 .flow .step .d{ font-size:14px; color:var(--sub); line-height:1.5; }
 .flow .arw{
@@ -499,18 +509,15 @@ table.fee tr.grp td:last-child{ text-align:right; }
   <div class="chapter"><span class="num">CHAPTER 3</span><span class="name">サービスの実際</span></div>
   <h2>訪問の流れ（サービス提供時間 45分以内）</h2>
   <div class="rule" style="margin-bottom:18px;"></div>
-  <div class="flow">
-    <div class="step"><div class="n">STEP 1</div><div class="t">到着・ご挨拶</div><div class="d">ご本人の様子と<br>当日の体調を確認</div></div>
+  <div class="flow three">
+    <div class="step"><div class="n">15分</div><div class="t">準備・設置</div>
+      <div class="d">到着・ご挨拶／当日の体調確認<br>専用浴槽の搬入・組立<br>バイタル確認と入浴可否の判断</div></div>
     <div class="arw">›</div>
-    <div class="step"><div class="n">STEP 2</div><div class="t">機材搬入・設置</div><div class="d">専用浴槽を組立<br>約10分</div></div>
+    <div class="step g"><div class="n">15分</div><div class="t">入　浴</div>
+      <div class="d">全身浴・洗髪<br>入浴中の全身観察<br>（褥瘡・浮腫・皮膚の状態）</div></div>
     <div class="arw">›</div>
-    <div class="step g"><div class="n">STEP 3</div><div class="t">バイタル確認</div><div class="d">看護師が判断<br>入浴可否を決定</div></div>
-    <div class="arw">›</div>
-    <div class="step g"><div class="n">STEP 4</div><div class="t">入　浴</div><div class="d">全身浴・洗髪<br>約20分</div></div>
-    <div class="arw">›</div>
-    <div class="step g"><div class="n">STEP 5</div><div class="t">更衣・保湿ケア</div><div class="d">整容・保湿<br>（医療処置は行いません）</div></div>
-    <div class="arw">›</div>
-    <div class="step"><div class="n">STEP 6</div><div class="t">記録・連絡</div><div class="d">連絡ノート記載<br>関係職種へ報告</div></div>
+    <div class="step"><div class="n">15分</div><div class="t">片付け・記録</div>
+      <div class="d">更衣・保湿ケア／整容<br>機材の撤収・原状復帰<br>記録と関係職種への連絡</div></div>
   </div>
   <div class="cols" style="margin-top:8px;">
     <div class="card">

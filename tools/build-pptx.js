@@ -157,23 +157,24 @@ s.addNotes('4条件のうち3つまでなら他サービスでも満たせます
 /* ---------- 6. Ch3-1 流れ ---------- */
 s=pres.addSlide();
 header(s,'CHAPTER 3','サービスの実際','訪問の流れ（サービス提供時間 45分以内）');
-const steps=[['1','到着・ご挨拶','体調の確認',0],['2','機材搬入・設置','浴槽を組立／約10分',0],
- ['3','バイタル確認','看護師が入浴可否を判断',1],['4','入　浴','全身浴・洗髪／約20分',1],
- ['5','更衣・保湿ケア','整容・保湿（医療処置は行いません）',1],['6','記録・連絡','関係職種へ報告',0]];
-const ws=(CW-5*0.16)/6;
-steps.forEach((st,i)=>{
-  const x=M+i*(ws+0.16);
-  s.addShape(pres.ShapeType.roundRect,{x,y:1.7,w:ws,h:1.5,fill:{color:st[3]?TG:TINT},rectRadius:0.06,line:{color:st[3]?TG:TINT}});
-  s.addText('STEP '+st[0],{x:x+0.06,y:1.82,w:ws-0.12,h:0.24,fontFace:F,fontSize:9.5,bold:true,color:SUB,align:'center',valign:'middle',isTextBox:true,margin:0});
-  s.addText(st[1],{x:x+0.06,y:2.08,w:ws-0.12,h:0.34,fontFace:F,fontSize:13.5,bold:true,color:P,align:'center',valign:'middle',isTextBox:true,margin:0});
-  s.addText(st[2],{x:x+0.06,y:2.44,w:ws-0.12,h:0.6,fontFace:F,fontSize:10,color:SUB,align:'center',valign:'top',isTextBox:true,margin:0});
-  if(i<5) s.addText('›',{x:x+ws,y:1.7,w:0.16,h:1.5,fontFace:F,fontSize:16,bold:true,color:GY,align:'center',valign:'middle',isTextBox:true,margin:0});
+const phases=[['準備・設置','到着・ご挨拶／当日の体調確認\n専用浴槽の搬入・組立\nバイタル確認と入浴可否の判断',0],
+ ['入　浴','全身浴・洗髪\n入浴中の全身観察\n（褥瘡・浮腫・皮膚の状態）',1],
+ ['片付け・記録','更衣・保湿ケア／整容\n機材の撤収・原状復帰\n記録と関係職種への連絡',0]];
+const wp=(CW-2*0.34)/3;
+phases.forEach((ph,i)=>{
+  const x=M+i*(wp+0.34);
+  s.addShape(pres.ShapeType.roundRect,{x,y:1.7,w:wp,h:2.5,fill:{color:ph[2]?TG:TINT},rectRadius:0.07,line:{color:ph[2]?TG:TINT}});
+  s.addShape(pres.ShapeType.roundRect,{x:x+wp/2-0.52,y:1.94,w:1.04,h:0.36,fill:{color:ph[2]?S:P},rectRadius:0.05,line:{color:ph[2]?S:P}});
+  s.addText('15分',{x:x+wp/2-0.52,y:1.94,w:1.04,h:0.36,fontFace:F,fontSize:13,bold:true,color:WH,align:'center',valign:'middle',isTextBox:true,margin:0});
+  s.addText(ph[0],{x:x+0.12,y:2.42,w:wp-0.24,h:0.4,fontFace:F,fontSize:20,bold:true,color:P,align:'center',valign:'middle',isTextBox:true,margin:0});
+  s.addText(ph[1],{x:x+0.12,y:2.88,w:wp-0.24,h:1.2,fontFace:F,fontSize:12.5,color:SUB,align:'center',valign:'top',lineSpacingMultiple:1.35,isTextBox:true,margin:0});
+  if(i<2) s.addText('›',{x:x+wp,y:1.7,w:0.34,h:2.5,fontFace:F,fontSize:26,bold:true,color:GY,align:'center',valign:'middle',isTextBox:true,margin:0});
 });
-card(s,{x:M,y:3.44,w:CW/2-0.16,h:1.62,fill:TINT,title:'入浴できないと判断した場合',
+card(s,{x:M,y:4.44,w:CW/2-0.16,h:1.62,fill:TINT,title:'入浴できないと判断した場合',
   body:'発熱・血圧変動・全身状態の悪化時は、看護師の判断で**清拭や部分浴に切り替え**。中止時もご家族・ケアマネジャーへ理由を報告します。',fontSize:12.5});
-card(s,{x:M+CW/2+0.16,y:3.44,w:CW/2-0.16,h:1.62,fill:TG,title:'住環境への配慮',titleColor:S,
+card(s,{x:M+CW/2+0.16,y:4.44,w:CW/2-0.16,h:1.62,fill:TG,title:'住環境への配慮',titleColor:S,
   body:'給湯は**車両または屋内の給湯設備**から。ベッドサイドに約2畳のスペースがあれば設置可能。床・寝具の養生も行います。',fontSize:12.5});
-s.addNotes('全6ステップ。バイタル確認から記録までが看護師の関わる部分です。中止判断も含めて必ず報告します。');
+s.addNotes('準備・入浴・片付けの3区分、各15分で計45分以内です。入浴可否の判断と記録・連絡が看護師の関わる部分になります。');
 
 /* ---------- 7. Ch3-2 体制 ---------- */
 s=pres.addSlide();

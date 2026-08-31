@@ -37,7 +37,7 @@ body{
   width:210mm;
   min-height:297mm;
   margin:8mm auto;
-  padding:8mm 11mm 6mm;
+  padding:7mm 11mm 5mm;
   background:#fff;
   box-shadow:0 2px 12px rgba(0,0,0,.14);
   position:relative;
@@ -83,7 +83,7 @@ body{
 }
 
 /* ===== セクション ===== */
-.sec{ margin-bottom:2.2mm; }
+.sec{ margin-bottom:1.8mm; }
 .sec > h2{
   margin:0 0 2mm;
   background:var(--primary);
@@ -177,6 +177,15 @@ table.cmp td.own{ background:var(--tint-green); }
 }
 .flow .step.g{ background:var(--tint-green); border-top-color:var(--secondary); }
 .flow .step .t{ font-size:9pt; font-weight:700; color:var(--primary); line-height:1.35; }
+.flow.three .step{ padding:1.8mm 2mm; }
+.flow.three .step .n{
+  display:inline-block; background:var(--primary); color:#fff;
+  font-size:8pt; font-weight:700; padding:.3mm 2.5mm; border-radius:1.5px; margin-bottom:.7mm;
+}
+.flow.three .step.g .n{ background:var(--secondary); }
+.flow.three .step .t{ font-size:10.5pt; margin-bottom:.7mm; }
+.flow.three .step .d{ font-size:8.5pt; line-height:1.4; }
+.flow.three .arw{ width:5mm; font-size:12pt; }
 .flow .step .d{ font-size:7.5pt; color:var(--sub); margin-top:.8mm; line-height:1.4; }
 .flow .arw{
   display:flex; align-items:center; justify-content:center;
@@ -333,7 +342,7 @@ table.fee tr.grp td:last-child{ text-align:right; }
   <div class="sec">
     <h2><span class="n">01</span>訪問入浴介護とは</h2>
     <p><strong>看護師1名＋介護スタッフ2名</strong>の3名チームが、専用の組立式浴槽を車両で持参してご自宅を訪問し、居室で<strong>全身浴</strong>を提供する介護保険サービスです。</p>
-    <p>浴室の広さや段差にかかわらず、ベッドサイドに約2畳のスペースがあれば実施できます。入浴前後は看護師がバイタルと全身状態を確認して入浴可否を判断し、異常があれば清拭・部分浴へ切り替えて主治医・ケアマネジャーへ報告します。</p>
+    <p>ベッドサイドに約2畳のスペースがあれば、浴室の広さや段差にかかわらず実施できます。入浴前後は看護師が入浴可否を判断し、異常があれば清拭・部分浴へ切り替えて主治医・ケアマネジャーへ報告します。</p>
   </div>
 
   <div class="sec">
@@ -375,31 +384,28 @@ table.fee tr.grp td:last-child{ text-align:right; }
 
   <div class="sec">
     <h2><span class="n">04</span>サービスの流れ（サービス提供時間 45分以内）</h2>
-    <div class="flow">
-      <div class="step"><div class="t">到着</div><div class="d">ご挨拶・<br>当日の体調確認</div></div>
+    <div class="flow three">
+      <div class="step"><div class="n">15分</div><div class="t">準備・設置</div>
+        <div class="d">到着・体調確認／浴槽の搬入・組立<br>バイタル確認・入浴可否の判断</div></div>
       <div class="arw">›</div>
-      <div class="step"><div class="t">設置</div><div class="d">浴槽の組立<br>約10分</div></div>
+      <div class="step g"><div class="n">15分</div><div class="t">入　浴</div>
+        <div class="d">全身浴・洗髪<br>入浴中の全身観察</div></div>
       <div class="arw">›</div>
-      <div class="step g"><div class="t">バイタル確認</div><div class="d">看護師が<br>入浴可否を判断</div></div>
-      <div class="arw">›</div>
-      <div class="step g"><div class="t">入　浴</div><div class="d">全身浴・洗髪<br>約20分</div></div>
-      <div class="arw">›</div>
-      <div class="step g"><div class="t">更衣・保湿</div><div class="d">整容・保湿<br>（医療処置は除く）</div></div>
-      <div class="arw">›</div>
-      <div class="step"><div class="t">記録・連絡</div><div class="d">連絡ノート記載<br>関係職種へ報告</div></div>
+      <div class="step"><div class="n">15分</div><div class="t">片付け・記録</div>
+        <div class="d">更衣・保湿ケア／機材の撤収<br>記録と関係職種への連絡</div></div>
     </div>
     <p class="muted" style="margin-top:1.5mm;">※給湯は車両または屋内の給湯設備から。床・寝具の養生と原状復帰までスタッフが対応し、ご家族が介助に入る必要はありません。</p>
   </div>
 
   <div class="sec">
     <h2><span class="n">05</span>看護師の視点と、訪問看護との役割分担</h2>
-    <p style="margin-bottom:1.5mm;">訪問入浴は介護保険サービスのため<strong>医療行為は行えません</strong>。異常を早期に見つけ、訪問看護・主治医へおつなぎするのが私たちの役割です。</p>
+    <p style="margin-bottom:1.5mm;">訪問入浴は介護保険サービスのため<strong>医療行為は行えません</strong>。異常を早期に見つけ、訪問看護・主治医へつなぐのが私たちの役割です。</p>
     <div class="nurse">
       <div class="box g">
         <h3>訪問入浴が担うこと</h3>
         <ul>
           <li>バイタル測定と<b>入浴可否の判断</b></li>
-          <li>入浴時の<b>全身観察</b>（褥瘡・浮腫・皮膚・スキンテア）</li>
+          <li>入浴時の<b>全身観察</b>（褥瘡・浮腫・皮膚）</li>
           <li>洗身・洗髪と日常的な保湿ケア</li>
           <li>観察所見の記録と<b>当日中の報告</b></li>
         </ul>
