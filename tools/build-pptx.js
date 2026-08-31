@@ -156,10 +156,10 @@ s.addNotes('4条件のうち3つまでなら他サービスでも満たせます
 
 /* ---------- 6. Ch3-1 流れ ---------- */
 s=pres.addSlide();
-header(s,'CHAPTER 3','サービスの実際','訪問の流れ（滞在およそ45〜60分）');
-const steps=[['1','到着・ご挨拶','体調の確認',0],['2','機材搬入・設置','浴槽を組立／10〜15分',0],
- ['3','バイタル確認','看護師が入浴可否を判断',1],['4','入　浴','全身浴・洗髪／20〜30分',1],
- ['5','スキンケア','保湿・軟膏塗布・褥瘡処置',1],['6','記録・連絡','関係職種へ報告',0]];
+header(s,'CHAPTER 3','サービスの実際','訪問の流れ（サービス提供時間 45分以内）');
+const steps=[['1','到着・ご挨拶','体調の確認',0],['2','機材搬入・設置','浴槽を組立／約10分',0],
+ ['3','バイタル確認','看護師が入浴可否を判断',1],['4','入　浴','全身浴・洗髪／約20分',1],
+ ['5','更衣・保湿ケア','整容・保湿（医療処置は行いません）',1],['6','記録・連絡','関係職種へ報告',0]];
 const ws=(CW-5*0.16)/6;
 steps.forEach((st,i)=>{
   const x=M+i*(ws+0.16);
@@ -183,7 +183,7 @@ s.addShape(pres.ShapeType.roundRect,{x:M+0.24,y:1.86,w:0.86,h:0.32,fill:{color:S
 s.addText('1名',{x:M+0.24,y:1.86,w:0.86,h:0.32,fontFace:F,fontSize:11,bold:true,color:WH,align:'center',valign:'middle',isTextBox:true,margin:0});
 s.addText('看護師',{x:M+1.22,y:1.86,w:3,h:0.32,fontFace:F,fontSize:16,bold:true,color:S,valign:'middle',isTextBox:true,margin:0});
 s.addText(bullets(['入浴前後の**アセスメント**（バイタル・全身状態）','入浴可否の**その場での判断**',
-  '褥瘡・創傷の観察と処置、軟膏塗布','急変時の**初期対応と主治医への連絡**','関係職種への**情報提供**'],{fontSize:12.5}),
+  '褥瘡・創傷の**観察と記録**（処置は訪問看護へ）','急変時の**初期判断と主治医・訪問看護師への連絡**','関係職種への**情報提供**'],{fontSize:12.5}),
   {x:M+0.24,y:2.34,w:CW*0.53-0.48,h:2.2,paraSpaceAfter:6,valign:'top',isTextBox:true,margin:0});
 const x2=M+CW*0.53+0.22, w2=CW*0.47-0.22;
 s.addShape(pres.ShapeType.roundRect,{x:x2,y:1.66,w:w2,h:3.05,fill:{color:TINT},rectRadius:0.06,line:{color:TINT}});
@@ -213,11 +213,44 @@ card(s,{x:M,y:2.16,w:w3b,h:2.72,fill:TINT,title:'早期発見できるもの',it
 card(s,{x:M+w3b+0.22,y:2.16,w:w3b,h:2.72,fill:TINT,title:'体格・栄養の把握',items:[
  '脱衣時の**体型変化・筋肉量の減少**','骨突出の進行（褥瘡リスク上昇）','皮膚の乾燥・ツルゴール低下'],fontSize:12});
 card(s,{x:M+2*(w3b+0.22),y:2.16,w:w3b,h:2.72,fill:TG,title:'その日のうちに共有',titleColor:S,items:[
- '主治医へ**創部の状態を報告**','訪問看護師へ**処置の申し送り**','ケアマネジャーへ**状態変化の連絡**','必要時は**写真記録**を添えて'],fontSize:12});
+ '主治医へ**創部の状態を報告**','訪問看護師へ**観察所見の申し送り**','ケアマネジャーへ**状態変化の連絡**','必要時は**写真記録**を添えて'],fontSize:12});
 s.addShape(pres.ShapeType.roundRect,{x:M,y:5.14,w:CW,h:0.72,fill:{color:TG},rectRadius:0.06,line:{color:TG}});
 s.addText('週1〜2回の入浴は、週1〜2回の全身アセスメントでもあります。',
   {x:M+0.28,y:5.14,w:CW-0.56,h:0.72,fontFace:F,fontSize:16,bold:true,color:P,valign:'middle',isTextBox:true,margin:0});
 s.addNotes('ここが訪問入浴の医療的価値です。褥瘡の初期発赤を最初に見つけるのは、入浴の場面が非常に多いです。');
+
+/* ---------- 9. Ch4-2 役割分担 ---------- */
+s=pres.addSlide();
+header(s,'CHAPTER 4','看護師の視点・医療連携','訪問入浴と訪問看護の役割分担');
+s.addText(runs('訪問入浴は介護保険サービスであり、**医療行為は行えません**。だからこそ訪問看護との連携が欠かせません。',{fontSize:15,strong:S,color:P}),
+  {x:M,y:1.58,w:CW,h:0.42,valign:'middle',isTextBox:true,margin:0});
+card(s,{x:M,y:2.14,w:CW/2-0.16,h:2.86,fill:TG,title:'訪問入浴が担うこと',titleColor:S,items:[
+ 'バイタル測定と**入浴可否の判断**','入浴時の**全身観察**（褥瘡・浮腫・皮膚）',
+ '洗身・洗髪と**日常的な保湿ケア**','観察所見の**記録と当日中の報告**'],fontSize:12.5});
+card(s,{x:M+CW/2+0.16,y:2.14,w:CW/2-0.16,h:2.86,fill:TINT,title:'訪問看護におつなぎすること',items:[
+ '褥瘡・創傷の**処置**、薬剤の塗布','点滴・注射・採血','カテーテル・ストーマの管理',
+ '喀痰吸引・経管栄養の管理','医師の指示に基づく**医療的ケア全般**'],fontSize:12.5});
+s.addShape(pres.ShapeType.roundRect,{x:M,y:5.18,w:CW,h:0.88,fill:{color:TINT},rectRadius:0.06,line:{color:TINT}});
+s.addText([{text:'私たちの役割は',options:{fontFace:F,fontSize:15,color:TX}},
+  {text:'「見つけて、つなぐ」',options:{fontFace:F,fontSize:15,bold:true,color:S}},
+  {text:'こと。処置は訪問看護へ——この線引きを明確にすることが、安全な在宅ケアにつながります。',options:{fontFace:F,fontSize:15,color:TX}}],
+  {x:M+0.28,y:5.18,w:CW-0.56,h:0.88,valign:'middle',lineSpacingMultiple:1.3,isTextBox:true,margin:0});
+s.addNotes('訪問入浴は介護保険サービスなので医療行為はできません。だから訪問看護との連携が前提になります。この線引きを明確にお伝えしてください。');
+
+/* ---------- 10. Ch4-3 連携のお願い ---------- */
+s=pres.addSlide();
+header(s,'CHAPTER 4','看護師の視点・医療連携','訪問看護のみなさまへ ── 連携のお願い');
+const wr=(CW-0.44)/3;
+card(s,{x:M,y:1.66,w:wr,h:3.2,fill:TG,title:'① 訪問日を合わせてください',titleColor:S,
+  body:'入浴直後は皮膚が清潔で、**創部の観察と処置に最も適した状態**です。同日・入浴後にご訪問いただけると、処置の条件が整います。',fontSize:12.5});
+card(s,{x:M+wr+0.22,y:1.66,w:wr,h:3.2,fill:TINT,title:'② 見てほしい部位を',
+  body:'前回の**処置内容と注意部位**を共有いただければ、その点を重点的に観察し、当日中に連絡ノート・電話・必要時は写真でお返しします。',fontSize:12.5});
+card(s,{x:M+2*(wr+0.22),y:1.66,w:wr,h:3.2,fill:TINT,title:'③ 医療的ケアは事前に相談',
+  body:'気管切開・経管栄養・在宅酸素など。**主治医の指示内容と留意点**を共有いただければ、受け入れ可否と入浴時の注意点を一緒に検討します。',fontSize:12.5});
+s.addShape(pres.ShapeType.roundRect,{x:M,y:5.04,w:CW,h:0.95,fill:{color:S},rectRadius:0.07,line:{color:S}});
+s.addText('「この状態で入浴させてよいか」——迷った時点でご連絡ください。一緒に判断させてください。',
+  {x:M+0.3,y:5.04,w:CW-0.6,h:0.95,fontFace:F,fontSize:17,bold:true,color:WH,align:'center',valign:'middle',isTextBox:true,margin:0});
+s.addNotes('本日いちばんお願いしたい点です。特に訪問看護ステーションの方に向けて、同日訪問と事前相談をお願いしてください。');
 
 /* ---------- 9. Ch4-2 チーム ---------- */
 s=pres.addSlide();
@@ -228,7 +261,7 @@ s.addText([{text:'訪問入浴介護',options:{fontFace:F,fontSize:16,bold:true,
   {x:M+0.1,y:1.86,w:2.3,h:1.62,align:'center',valign:'middle',lineSpacingMultiple:1.3,isTextBox:true,margin:0});
 s.addText('⇄',{x:M+2.56,y:1.86,w:0.42,h:1.62,fontFace:F,fontSize:22,bold:true,color:S,align:'center',valign:'middle',isTextBox:true,margin:0});
 const px=M+3.06, pw=(CW-3.06-0.22)/2;
-[['主治医・在宅医','創部・全身状態の報告／指示の確認'],['訪問看護ステーション','処置内容の共有／訪問日の調整'],
+[['主治医・在宅医','創部・全身状態の報告／指示の確認'],['訪問看護ステーション','観察所見の共有／医療処置の依頼'],
  ['ケアマネジャー','状態変化・生活課題のフィードバック'],['デイサービス・訪問介護','入浴日の分担／スキンケアの継続']]
 .forEach((p,i)=>{
   const x=px+(i%2)*(pw+0.22), y=1.86+Math.floor(i/2)*0.86;
@@ -240,7 +273,7 @@ const px=M+3.06, pw=(CW-3.06-0.22)/2;
 card(s,{x:M,y:3.74,w:CW/2-0.16,h:1.66,fill:TINT,title:'「競合」ではありません',
   body:'デイサービスに通えている間はデイでの入浴を。**体調やADLの低下で通所が難しくなった時期**に訪問入浴が引き継ぐ、という補完関係です。',fontSize:12.5});
 card(s,{x:M+CW/2+0.16,y:3.74,w:CW/2-0.16,h:1.66,fill:TG,title:'併用が最も現実的',titleColor:S,
-  body:'「デイ入浴＋訪問入浴」「訪問看護の処置＋訪問入浴のスキンケア」。**役割を分け合うことで在宅の限界点が延びます。**',fontSize:12.5});
+  body:'「デイ入浴＋訪問入浴」「訪問入浴の観察＋訪問看護の処置」。**役割を分け合うことで在宅の限界点が延びます。**',fontSize:12.5});
 s.addNotes('デイサービスの方に特にお伝えしたい点です。奪い合いではなく、通所が難しくなった段階での受け皿としてお考えください。');
 
 /* ---------- 10. Ch5 介護報酬 ---------- */
@@ -294,7 +327,7 @@ s.addText(bullets([
  '**入浴困難の「空白地帯」を埋める**——デイに通えず、清拭では足りない方の受け皿。',
  '**「自宅で・全身浴を・看護師付きで・重度でも」の4条件を唯一満たす**サービス。',
  '**週1〜2回の全身アセスメントの場**——褥瘡・浮腫・栄養状態の変化を早期に捉える。',
- '**在宅チームへの情報のハブ**——主治医・訪問看護・CMへその日のうちに共有。'],{fontSize:15,strong:P,color:TX}),
+ '**医療行為は行わず「見つけて、つなぐ」**——訪問看護と役割を分け合い、その日のうちに情報を共有。'],{fontSize:15,strong:P,color:TX}),
  {x:M,y:1.66,w:CW,h:2.3,paraSpaceAfter:12,valign:'top',isTextBox:true,margin:0});
 s.addShape(pres.ShapeType.roundRect,{x:M,y:4.12,w:CW,h:1.35,fill:{color:P},rectRadius:0.07,line:{color:P}});
 s.addText([{text:'「もう入浴は難しいかもしれない」と感じた時が、',options:{fontFace:F,fontSize:19,bold:true,color:WH,breakLine:true}},
