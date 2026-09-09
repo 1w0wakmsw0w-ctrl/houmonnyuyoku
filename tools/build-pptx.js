@@ -78,7 +78,7 @@ s.addText('訪問入浴介護の役割と可能性',{x:M,y:3.3,w:CW,h:0.5,fontFa
 s.addShape(pres.ShapeType.rect,{x:M,y:4.32,w:CW,h:0.02,fill:{color:'3D6E8C'},line:{color:'3D6E8C'}});
 s.addText([{text:'アップルハート八幡西訪問入浴センター',options:{fontFace:F,fontSize:17,bold:true,color:WH,breakLine:true}},
   {text:'管理者・看護師　冨永　一心',options:{fontFace:F,fontSize:14,color:'C9DCE8',breakLine:true}},
-  {text:'2024年10月15日（火）19:00〜',options:{fontFace:F,fontSize:14,color:'C9DCE8'}}],
+  {text:'2026年10月15日（木）19:00〜',options:{fontFace:F,fontSize:14,color:'C9DCE8'}}],
   {x:M,y:4.6,w:CW,h:1.4,lineSpacingMultiple:1.4,isTextBox:true,margin:0});
 s.addNotes('本日は訪問入浴介護についてお話しします。テーマは「自宅でお風呂に入る権利」。在宅で入浴が困難な方に、どう関わり、どう連携できるかをお伝えします。');
 
@@ -135,7 +135,13 @@ s.addText([{text:'\u2713 対応できる',options:{fontFace:F,fontSize:10.5,colo
   {text:'\u3000\u3000\u2715 対応が難しい',options:{fontFace:F,fontSize:10.5,color:SUB,breakLine:true}},
   {text:'\u203B「訪問看護」「訪問介護」欄は自宅の浴室での入浴介助を指します。清拭・部分浴はサービス種別を問わず実施される方法です。',
    options:{fontFace:F,fontSize:10,color:SUB}}],
-  {x:M,y:4.72,w:CW,h:0.7,lineSpacingMultiple:1.4,isTextBox:true,margin:0});
+  {x:M,y:4.72,w:CW,h:0.62,lineSpacingMultiple:1.4,isTextBox:true,margin:0});
+s.addShape(pres.ShapeType.roundRect,{x:M,y:5.42,w:CW,h:0.66,fill:{color:TG},rectRadius:0.05,line:{color:TG}});
+s.addText([{text:'訪問入浴の利用者は',options:{fontFace:F,fontSize:14,color:TX}},
+  {text:'要介護5が48.2%、要介護4が25.1%',options:{fontFace:F,fontSize:14,bold:true,color:S}},
+  {text:'——約4分の3が要介護4〜5の重度の方です。',options:{fontFace:F,fontSize:14,bold:true,color:TX}},
+  {text:'（日本在宅介護協会 2025年調査）',options:{fontFace:F,fontSize:11,color:SUB}}],
+  {x:M+0.28,y:5.42,w:CW-0.56,h:0.66,valign:'middle',isTextBox:true,margin:0});
 s.addNotes('この表が本日の中心です。訪問看護・訪問介護の入浴介助も比較に入れました。訪問入浴の違いは、専用浴槽を持参するため浴室環境に左右されない点と、3名体制で移乗できる点です。');
 
 /* ---------- 5. Ch2-2 4条件 ---------- */
@@ -203,12 +209,12 @@ s.addText('介護スタッフ',{x:x2+1.22,y:1.86,w:3,h:0.32,fontFace:F,fontSize:
 s.addText(bullets(['浴槽の搬入・設置・撤去','移乗介助（2名で安全に）','洗身・洗髪、更衣','居室の養生と原状復帰'],{fontSize:12.5}),
   {x:x2+0.24,y:2.34,w:w2-0.48,h:2.2,paraSpaceAfter:6,valign:'top',isTextBox:true,margin:0});
 s.addShape(pres.ShapeType.roundRect,{x:M,y:4.98,w:CW,h:1.05,fill:{color:TINT},rectRadius:0.06,line:{color:TINT}});
-s.addText([{text:'3名体制である意味 — ',options:{fontFace:F,fontSize:14,bold:true,color:P}},
-  {text:'移乗を2名で担うことで',options:{fontFace:F,fontSize:14,color:TX}},
+s.addText([{text:'3名体制は省令上の要件です — ',options:{fontFace:F,fontSize:14,bold:true,color:P}},
+  {text:'1回の訪問に看護職員1名＋介護職員2名の計3名と厚生労働省令で定められています。移乗を2名で担うため',options:{fontFace:F,fontSize:14,color:TX}},
   {text:'転倒・皮膚剥離のリスクを抑え',options:{fontFace:F,fontSize:14,bold:true,color:S}},
-  {text:'、看護師は介助に追われず',options:{fontFace:F,fontSize:14,color:TX}},
+  {text:'、看護師は',options:{fontFace:F,fontSize:14,color:TX}},
   {text:'観察と判断に専念',options:{fontFace:F,fontSize:14,bold:true,color:S}},
-  {text:'できます。ご家族が介助に入る必要はありません。',options:{fontFace:F,fontSize:14,color:TX}}],
+  {text:'できます。',options:{fontFace:F,fontSize:14,color:TX}}],
   {x:M+0.28,y:4.98,w:CW-0.56,h:1.05,valign:'middle',lineSpacingMultiple:1.3,isTextBox:true,margin:0});
 s.addNotes('なぜ3名なのか、という質問をよく受けます。安全確保と、看護師が観察に専念できる体制のためです。');
 
@@ -309,7 +315,7 @@ s.addTable([
 s.addText('※2024年4月改定後の単位数。単価は地域区分により異なります。',
   {x:M,y:5.36,w:6.9,h:0.3,fontFace:F,fontSize:10,color:SUB,isTextBox:true,margin:0});
 card(s,{x:M+7.16,y:1.62,w:CW-7.16,h:3.62,fill:TG,title:'単位数をどう読むか',titleColor:S,items:[
- '**3名（うち看護師1名）**が同時に訪問','専用浴槽・給湯設備の**持ち込みと設置**','清拭では届かない**全身浴・洗髪**',
+ '**3名（うち看護職員1名）**が同時に訪問（厚生労働省令で定められた体制）','専用浴槽・給湯設備の**持ち込みと設置**','清拭では届かない**全身浴・洗髪**',
  '毎回の**バイタル測定と全身観察**','関係職種への**情報共有**'],fontSize:12.5});
 s.addText(runs('入浴のみの報酬ではなく、**看護アセスメントを含んだ包括的なケアの対価**としてご検討ください。',{fontSize:12.5}),
   {x:M+7.4,y:4.5,w:CW-7.64,h:0.7,lineSpacingMultiple:1.25,isTextBox:true,margin:0});
