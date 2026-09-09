@@ -1,3 +1,6 @@
+// NOTE: 配布中の houmon-nyuyoku-slides.pptx は、発表者が PowerPoint 上で
+// 文字サイズ等を調整したファイルを直接編集したもの。このスクリプトを実行すると
+// その調整が失われるため、再生成する場合は先に発表者へ確認すること。
 const pptxgen = require('pptxgenjs');
 
 const P='1A5276', S='1D9E75', A='2E86C1', TX='1C2833', SUB='566573',
@@ -305,14 +308,15 @@ s.addTable([
  [{text:[{text:'訪問入浴介護費',options:{fontFace:F,fontSize:14,bold:true,color:TX}},
    {text:'\n看護師1＋介護2の3名体制・全身浴',options:{fontFace:F,fontSize:9.5,color:SUB}}],options:{valign:'middle',fill:{color:TG}}},
   fn('1,266','単位/回',{c:S,fill:{color:TG}})],
- [fc('清拭（身体介護2・30〜60分）'),fn('387','単位/回')],
- [fc('清拭（身体介護3・1時間以上）'),fn('567','単位/回')],
+ [fc('清拭・部分浴（1回）'),fn('1,139','単位/回')],
  [grp('主な加算'),{text:'単位数',options:{fontFace:F,fontSize:12,bold:true,color:WH,align:'right',valign:'middle',fill:{color:P}}}],
+ [fc('初回加算（月1回）'),fn('200','単位')],
  [fc('看取り連携体制加算（2024年新設）'),fn('64','単位')],
  [fc('認知症専門ケア加算（Ⅰ）'),fn('3','単位/日')],
- [fc('認知症専門ケア加算（Ⅱ）'),fn('4','単位/日')]],
- {x:M,y:1.62,w:6.9,colW:[4.75,2.15],rowH:0.42,border:{type:'solid',color:'E5E9EC',pt:1},fontFace:F,valign:'middle'});
-s.addText('※2024年4月改定後の単位数。単価は地域区分により異なります。',
+ [fc('認知症専門ケア加算（Ⅱ）'),fn('4','単位/日')],
+ [fc('介護職員等処遇改善加算 加算Ⅱ（ロ）'),fn('12.7','％')]],
+ {x:M,y:1.62,w:6.9,colW:[4.75,2.15],rowH:0.372,border:{type:'solid',color:'E5E9EC',pt:1},fontFace:F,valign:'middle'});
+s.addText('※2024年4月改定後の単位数。処遇改善加算は加算率。単価は地域区分により異なります。',
   {x:M,y:5.36,w:6.9,h:0.3,fontFace:F,fontSize:10,color:SUB,isTextBox:true,margin:0});
 card(s,{x:M+7.16,y:1.62,w:CW-7.16,h:3.62,fill:TG,title:'単位数をどう読むか',titleColor:S,items:[
  '**3名（うち看護職員1名）**が同時に訪問（厚生労働省令で定められた体制）','専用浴槽・給湯設備の**持ち込みと設置**','清拭では届かない**全身浴・洗髪**',
