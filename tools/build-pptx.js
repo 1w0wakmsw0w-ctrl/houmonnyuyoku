@@ -148,7 +148,7 @@ s.addNotes('この表が本日の中心です。訪問看護・訪問介護の�
 s=pres.addSlide();
 header(s,'CHAPTER 2','比較・差別化','訪問入浴にしかできないこと');
 const four=[['1','自宅で','移動・外出の負担なし'],['2','全身浴を','洗髪・背部まで温める'],
-            ['3','看護師付きで','毎回のアセスメント'],['4','重度でも','寝たきり・医療的ケア可']];
+            ['3','看護師付きで','毎回のアセスメント'],['4','重度でも','寝たきり・全介助でも']];
 const w4=(CW-0.66)/4;
 four.forEach((f,i)=>{
   const x=M+i*(w4+0.22);
@@ -156,7 +156,7 @@ four.forEach((f,i)=>{
   s.addShape(pres.ShapeType.ellipse,{x:x+w4/2-0.28,y:1.94,w:0.56,h:0.56,fill:{color:S},line:{color:S}});
   s.addText(f[0],{x:x+w4/2-0.28,y:1.94,w:0.56,h:0.56,fontFace:F,fontSize:19,bold:true,color:WH,align:'center',valign:'middle',isTextBox:true,margin:0});
   s.addText(f[1],{x:x+0.1,y:2.62,w:w4-0.2,h:0.36,fontFace:F,fontSize:17,bold:true,color:P,align:'center',valign:'middle',isTextBox:true,margin:0});
-  s.addText(f[2],{x:x+0.1,y:2.98,w:w4-0.2,h:0.4,fontFace:F,fontSize:11,color:SUB,align:'center',valign:'top',isTextBox:true,margin:0});
+  s.addText(f[2],{x:x+0.06,y:2.96,w:w4-0.12,h:0.52,fontFace:F,fontSize:11,color:SUB,align:'center',valign:'top',isTextBox:true,margin:0});
 });
 s.addShape(pres.ShapeType.roundRect,{x:M,y:3.82,w:CW,h:1.28,fill:{color:P},rectRadius:0.07,line:{color:P}});
 s.addText([{text:'この',options:{fontFace:F,fontSize:22,bold:true,color:WH}},
