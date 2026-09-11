@@ -68,8 +68,6 @@ function contactBlock(slide,y,dark){
     slide.addText(v,{x:M+1.0,y:ry,w:6.6,h:0.44,fontFace:F,fontSize:sz,bold:true,color:k==='TEL'?(dark?MINT:S):val,valign:'middle',isTextBox:true,margin:0});
     ry+=0.52;
   });
-  slide.addShape(pres.ShapeType.roundRect,{x:W-M-2.3,y:y+0.05,w:2.3,h:2.3,fill:{color:dark?P:WH},rectRadius:0.06,line:{color:GY,width:1.5,dashType:'dash'}});
-  slide.addText('QRコード\n（お問い合わせ用）',{x:W-M-2.3,y:y+0.05,w:2.3,h:2.3,fontFace:F,fontSize:11,color:dark?GY:SUB,align:'center',valign:'middle',isTextBox:true,margin:0});
 }
 
 /* ---------- 1. 表紙 ---------- */
@@ -124,11 +122,11 @@ const rowsData=[
  ['自宅で受けられる',        OK,OK ,OK ,NO ,OK ],
  ['全身浴ができる',          OK,TR ,TR ,OK ,NO ],
  ['浴室の環境に左右されない',OK,NO ,NO ,OK ,OK ],
- ['看護師が同行',            OK,OK ,NO ,TR ,NO ],
- ['複数名での移乗介助',      OK,NO ,NO ,OK ,NO ],
- ['重度・寝たきり対応',      OK,TR ,NO ,NO ,TR ],
+ ['看護師が同行',            OK,OK ,NO ,TR ,TR ],
+ ['複数名での移乗介助',      OK,TR ,TR ,OK ,TR ],
+ ['重度・寝たきり対応',      OK,TR ,TR ,TR ,TR ],
  ['バイタル・皮膚観察',      OK,OK ,NO ,TR ,NO ],
- ['在宅チームへ情報共有',    OK,OK ,TR ,NO ,NO ]];
+ ['在宅チームへ情報共有',    OK,OK ,OK ,OK ,OK ]];
 const tbl=[[hdr('項目'),hdrOwn('訪問入浴'),hdr('訪問看護'),hdr('訪問介護'),hdr('デイ入浴'),hdr('清拭・部分浴')]];
 rowsData.forEach(r=>tbl.push([lbl(r[0]),own(r[1]()),r[2](),r[3](),r[4](),r[5]()]));
 s.addTable(tbl,{x:M,y:1.58,w:CW,colW:[3.3,1.82,1.75,1.75,1.75,1.71],rowH:0.36,
@@ -328,8 +326,8 @@ s.addNotes('単位数が高いという指摘は当然あります。何が含�
 /* ---------- 11. Ch6 声 ---------- */
 s=pres.addSlide();
 header(s,'CHAPTER 6','利用者・ご家族の声','現場で聞かれる言葉');
-[['「毎週のお風呂が楽しみで、それだけで気持ちが前向きになります。」','80代・要介護4・ご本人'],
- ['「一人では絶対に無理でした。プロに任せることで、私も安心して介護できるようになりました。」','60代・ご家族（介護者）']]
+[['「毎週のお風呂が楽しみで、それだけで気持ちが前向きになります。」','80代・要介護5・ご本人'],
+ ['「一人では絶対に無理でした。プロに任せることで、私も安心して介護できるようになりました。」','70代・ご家族（介護者）']]
 .forEach((v,i)=>{
   const y=1.72+i*1.66;
   s.addShape(pres.ShapeType.roundRect,{x:M,y,w:CW,h:1.42,fill:{color:TINT},rectRadius:0.07,line:{color:TINT}});
