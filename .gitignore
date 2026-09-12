@@ -1,0 +1,7 @@
+# 生成物（動画は容量が大きくGit管理に向かないため除外。
+# 完成品はチャット経由で受け渡す／tools/build_video.py で再生成できる）
+output/
+
+# Python
+__pycache__/
+*.pyc
