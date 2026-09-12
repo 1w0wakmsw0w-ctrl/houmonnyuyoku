@@ -190,13 +190,51 @@ def ch2_closing():
     center_text(d, 600, "訪問入浴だけです。", F(76), GREEN)
     return img
 
-# ---------- Chapter 3：サービスの実際（素材動画／字幕） ----------
-CH3_SUBS = [
-    "スタッフが到着すると、まず専用浴槽を自宅へ搬入します。",
-    "入浴前に、看護師がバイタルサインを確認します。",
-    "温かいお湯に体が包まれる瞬間、多くの方が安堵した表情を浮かべます。",
-    "「気持ちいい」その一言が、私たちの一番の報酬です。",
+# ---------- Chapter 3：訪問の始まりと感染対策（素材動画／字幕） ----------
+# 素材はファイル名の昇順に並べ、下の順で字幕を割り当てる。
+# 1本のクリップに複数の字幕を置く場合はリストで指定（尺を等分する）。
+CH3_PLAN = [
+    ["訪問入浴は、スタッフがご自宅にお伺いするところから始まります。",
+     "専用浴槽と給湯設備を、車両から居室へ運び込みます。"],
+    ["居室に入る前に、感染対策の装備を整えます。"],
+    ["ガウン・手袋・マスク・キャップ。ご利用者を感染から守るための標準装備です。"],
 ]
+CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
+
+def ch3_title():
+    img = canvas(NAVY); d = ImageDraw.Draw(img)
+    center_text(d, 400, "CHAPTER 3", F(34), MINT)
+    center_text(d, 470, "訪問の始まりと感染対策", F(78), WHITE)
+    accent_bar(d, 620, MINT)
+    return img
+
+def ch3_flow():
+    """この後の流れ（15分×3区分）を示すスライド"""
+    img = canvas(WHITE); d = ImageDraw.Draw(img)
+    center_text(d, 90, "サービス提供時間は45分以内", F(56), NAVY)
+    accent_bar(d, 195)
+    steps = [("準備・設置", "浴槽の搬入・組立\nバイタル確認と入浴可否の判断"),
+             ("入　浴",     "全身浴・洗髪\n入浴中の全身観察"),
+             ("片付け・記録", "更衣・保湿ケア／機材の撤収\n記録と関係職種への連絡")]
+    bw, gap = 500, 60
+    x0 = (W - (bw * 3 + gap * 2)) // 2
+    for i, (title, body) in enumerate(steps):
+        x = x0 + i * (bw + gap)
+        d.rounded_rectangle([x, 290, x + bw, 700], 14, fill=TINTG if i == 1 else (244, 248, 250))
+        d.rounded_rectangle([x + bw / 2 - 70, 330, x + bw / 2 + 70, 388], 8, fill=GREEN if i == 1 else NAVY)
+        f = F(38)
+        d.text((x + bw / 2 - text_w(d, "15分", f) / 2, 340), "15分", font=f, fill=WHITE)
+        f = F(48)
+        d.text((x + bw / 2 - text_w(d, title, f) / 2, 430), title, font=f, fill=NAVY)
+        y = 520
+        for ln in body.split("\n"):
+            f = F(30)
+            d.text((x + bw / 2 - text_w(d, ln, f) / 2, y), ln, font=f, fill=SUB); y += 48
+        if i < 2:
+            f = F(44)
+            d.text((x + bw + gap / 2 - text_w(d, "→", f) / 2, 466), "→", font=f, fill=GRAY)
+    center_text(d, 780, "この後、浴槽の設置から入浴、片付けまでを45分以内で行います。", F(38), TEXT)
+    return img
 
 def subtitle_overlay(text):
     """映像に重ねる字幕帯（RGBA）"""
@@ -212,15 +250,16 @@ def subtitle_overlay(text):
 
 def ch3_placeholder():
     """素材が無い場合の代替スライド"""
+    subs = [s for group in CH3_PLAN for s in group]
     out = []
-    for n in range(1, len(CH3_SUBS) + 1):
+    for n in range(1, len(subs) + 1):
         img = canvas(NAVY); d = ImageDraw.Draw(img)
         center_text(d, 180, "CHAPTER 3", F(32), MINT)
-        center_text(d, 250, "サービスの実際", F(72), WHITE)
+        center_text(d, 250, "訪問の始まりと感染対策", F(72), WHITE)
         accent_bar(d, 380, MINT)
         y = 470
-        for s in CH3_SUBS[:n]:
-            for ln in wrap(d, s, F(42), W - 400):
+        for t in subs[:n]:
+            for ln in wrap(d, t, F(42), W - 400):
                 center_text(d, y, ln, F(42), (214, 230, 240)); y += 66
             y += 20
         out.append(img)
@@ -336,34 +375,39 @@ def list_materials(d):
         files += glob.glob(os.path.join(d, "*" + e))
     return sorted(set(files))
 
-def build_ch3(materials, xfade=0.5):
-    """素材動画があればChapter3を構成。無ければ None"""
+def build_ch3(materials, xfade=0.5, mute=True):
+    """素材動画からChapter3を構成。素材が無ければ None を返す。
+    CH3_PLAN の順に字幕を割り当て、1クリップに複数字幕がある場合は尺を等分する。"""
     from moviepy import VideoFileClip, ImageClip, CompositeVideoClip, concatenate_videoclips
-    from moviepy.video.fx import CrossFadeIn, Resize
+    from moviepy.video.fx import CrossFadeIn
     if not materials:
         return None, []
-    target, used = 120.0, []
-    per = max(6.0, target / len(materials))
-    clips = []
+    segments, used = [], []
     for i, path in enumerate(materials):
         try:
             v = VideoFileClip(path)
         except Exception as ex:
             print("  読み込み失敗: %s (%s)" % (os.path.basename(path), ex))
             continue
-        take = min(per, v.duration)
-        v = v.subclipped(0, take).resized(width=W)
+        if mute:
+            v = v.without_audio()
+        v = v.resized(width=W)
         if v.h < H:
             v = v.resized(height=H)
-        v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
-        sub = CH3_SUBS[i % len(CH3_SUBS)]
-        ov = ImageClip(np.array(subtitle_overlay(sub)), transparent=True).with_duration(v.duration)
-        clips.append(CompositeVideoClip([v, ov]).with_duration(v.duration))
-        used.append((os.path.basename(path), round(take, 1)))
-    if not clips:
+        if (v.w, v.h) != (W, H):
+            v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
+        subs = CH3_PLAN[i] if i < len(CH3_PLAN) else [CH3_FALLBACK]
+        part = v.duration / len(subs)
+        for j, text in enumerate(subs):
+            seg = v.subclipped(j * part, min((j + 1) * part, v.duration))
+            ov = ImageClip(np.array(subtitle_overlay(text)), transparent=True).with_duration(seg.duration)
+            segments.append(CompositeVideoClip([seg, ov]).with_duration(seg.duration))
+        used.append((os.path.basename(path), round(v.duration, 1)))
+    if not segments:
         return None, []
-    clips = [c if i == 0 else c.with_effects([CrossFadeIn(xfade)]) for i, c in enumerate(clips)]
-    return concatenate_videoclips(clips, padding=-xfade, method="compose"), used
+    segments = [c if i == 0 else c.with_effects([CrossFadeIn(xfade)])
+                for i, c in enumerate(segments)]
+    return concatenate_videoclips(segments, padding=-xfade, method="compose"), used
 
 def add_bgm(video, bgm_path, volume=0.22):
     from moviepy import AudioFileClip, CompositeAudioClip, concatenate_audioclips
@@ -409,11 +453,13 @@ def main():
 
     print("Chapter 3 を生成中…")
     ch3, used = build_ch3(materials, XF)
+    clips += to_clips([(ch3_title(), 5)])
     if ch3 is None:
         used = []
-        clips += to_clips([(i, 1.0 if args.preview else 30) for i in ch3_placeholder()])
+        clips += to_clips([(i, 1.0 if args.preview else 24) for i in ch3_placeholder()])
     else:
         clips.append(ch3)
+    clips += to_clips([(ch3_flow(), 22)])
 
     print("Chapter 4・5・6 を生成中…")
     clips += to_clips(timeline_tail())
