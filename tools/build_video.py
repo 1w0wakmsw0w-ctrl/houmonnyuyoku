@@ -215,6 +215,40 @@ CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 # 通しで撮った固定カメラの記録。各シーンの素材と内容が重複するため使わない
 CH3_EXCLUDE = ["キッチン", "頭元"]
 
+def contact_sheet(path, out_path, every=30, cols=5, thumb_w=384):
+    """動画を一定間隔で切り出し、時刻入りの一覧画像を作る。
+    どの時間に何が映っているかを見ながら シーン.txt を書くために使う。"""
+    from moviepy import VideoFileClip
+    v = VideoFileClip(path)
+    times = list(np.arange(0, v.duration, every))
+    if not times:
+        times = [0.0]
+    shots = []
+    for t in times:
+        try:
+            frame = v.get_frame(min(t, max(0, v.duration - 0.1)))
+        except Exception:
+            continue
+        im = Image.fromarray(frame)
+        im = im.resize((thumb_w, int(thumb_w * im.height / im.width)))
+        d = ImageDraw.Draw(im)
+        label = "%d:%02d" % (int(t) // 60, int(t) % 60)
+        f = F(28)
+        w = text_w(d, label, f)
+        d.rectangle([0, 0, w + 16, 40], fill=(0, 0, 0))
+        d.text((8, 4), label, font=f, fill=WHITE)
+        shots.append(im)
+    v.close()
+    if not shots:
+        return None
+    tw, th = shots[0].size
+    rows = (len(shots) + cols - 1) // cols
+    sheet = Image.new("RGB", (tw * cols, th * rows), WHITE)
+    for i, im in enumerate(shots):
+        sheet.paste(im, ((i % cols) * tw, (i // cols) * th))
+    sheet.save(out_path, quality=85)
+    return out_path, len(shots), v.duration
+
 def parse_scenes(materials_dir):
     """素材フォルダの「シーン.txt」を読む。書式は次のとおり。
 
@@ -532,6 +566,9 @@ def main():
     ap.add_argument("--bgm", default=os.path.expanduser("~/Desktop/bgm.mp3"))
     ap.add_argument("--out", default=os.path.expanduser("~/Desktop/訪問入浴_紹介動画.mp4"))
     ap.add_argument("--preview", action="store_true", help="各スライド1秒の確認用短尺")
+    ap.add_argument("--thumbs", action="store_true",
+                    help="動画を作らず、素材の内容一覧（時刻入り）を書き出す")
+    ap.add_argument("--every", type=int, default=30, help="一覧画像の間隔（秒）")
     args = ap.parse_args()
 
     from moviepy import ImageClip, concatenate_videoclips
@@ -545,6 +582,22 @@ def main():
           "" if materials else "（Chapter3はテキストスライドで代替します）"))
     for m in materials:
         print("   - %s" % os.path.basename(m))
+
+    if args.thumbs:
+        if not materials:
+            print("素材が見つかりません。")
+            return
+        for m in materials:
+            base = os.path.splitext(os.path.basename(m))[0]
+            out = os.path.join(args.materials, base + "_一覧.jpg")
+            print("  %s を確認中…" % os.path.basename(m))
+            r = contact_sheet(m, out, every=args.every)
+            if r:
+                print("   → %s（%d枚 / 全体 %d:%02d）"
+                      % (os.path.basename(out), r[1], int(r[2]) // 60, int(r[2]) % 60))
+        print("\n一覧画像を素材フォルダに書き出しました。")
+        print("画像を見ながら シーン.txt に時間を書いてください。")
+        return
 
     def to_clips(seq):
         cs = []
