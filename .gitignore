@@ -5,3 +5,6 @@ output/
 # Python
 __pycache__/
 *.pyc
+
+# moviepy がレンダリング中に作る一時ファイル
+*TEMP_MPY_*
