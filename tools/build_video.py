@@ -196,15 +196,15 @@ def ch2_closing():
 CH3_PLAN = [
     ["訪問入浴は、スタッフがご自宅にお伺いするところから始まります。",
      "専用浴槽と給湯設備を、車両から居室へ運び込みます。"],
-    ["居室に入る前に、感染対策の装備を整えます。"],
-    ["ガウン・手袋・マスク・キャップ。ご利用者を感染から守る標準装備です。"],
+    ["ご利用者やご家族に感染の疑いがある場合は、防護具を着用して訪問します。"],
+    ["ガウン・手袋・マスク・キャップ。感染を広げないための備えです。"],
 ]
 CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 
 def ch3_title():
     img = canvas(NAVY); d = ImageDraw.Draw(img)
     center_text(d, 400, "CHAPTER 3", F(34), MINT)
-    center_text(d, 470, "訪問の始まりと感染対策", F(78), WHITE)
+    center_text(d, 470, "訪問のはじまり", F(78), WHITE)
     accent_bar(d, 620, MINT)
     return img
 
@@ -255,7 +255,7 @@ def ch3_placeholder():
     for n in range(1, len(subs) + 1):
         img = canvas(NAVY); d = ImageDraw.Draw(img)
         center_text(d, 180, "CHAPTER 3", F(32), MINT)
-        center_text(d, 250, "訪問の始まりと感染対策", F(72), WHITE)
+        center_text(d, 250, "訪問のはじまり", F(72), WHITE)
         accent_bar(d, 380, MINT)
         y = 470
         for t in subs[:n]:
