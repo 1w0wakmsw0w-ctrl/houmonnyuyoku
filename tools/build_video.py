@@ -11,7 +11,7 @@
                            --bgm ~/Desktop/bgm.mp3 \
                            --out ~/Desktop/訪問入浴_紹介動画.mp4
 """
-import argparse, os, sys, glob, re
+import argparse, io, os, sys, glob, re
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
@@ -215,6 +215,42 @@ CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 # 通しで撮った固定カメラの記録。各シーンの素材と内容が重複するため使わない
 CH3_EXCLUDE = ["キッチン", "頭元"]
 
+def parse_scenes(materials_dir):
+    """素材フォルダの「シーン.txt」を読む。書式は次のとおり。
+
+        [キッチン側]          ← 角かっこの中にファイル名の一部
+        # これはコメント行
+        2:10  専用浴槽を組み立て、お湯を引きます。
+        8:30  お湯に体を預けたまま、洗髪を行います。   15   ← 末尾の数字は使う秒数
+
+    戻り値: {ファイル名の一部: [(開始秒, 字幕, 長さ秒), ...]}
+    ファイルが無ければ空の辞書。
+    """
+    path = os.path.join(materials_dir or "", "シーン.txt")
+    if not os.path.exists(path):
+        return {}
+    scenes, key = {}, None
+    for raw in io.open(path, encoding="utf-8-sig"):
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith("#") or line.startswith("//") or line.startswith("※"):
+            continue                                   # コメント行
+        m_key = re.match(r"^[\[［](.+?)[\]］]$", line)
+        if m_key:
+            key = m_key.group(1).strip()
+            scenes.setdefault(key, [])
+            continue
+        m = re.match(r"^(\d+):(\d+(?:\.\d+)?)\s+(.+?)(?:\s+(\d+))?$", line)
+        if not m or key is None:
+            print("  シーン.txt の読めない行: %s" % line)
+            continue
+        start = int(m.group(1)) * 60 + float(m.group(2))
+        scenes[key].append((start, m.group(3).strip(), int(m.group(4) or 12)))
+    for k in scenes:
+        scenes[k].sort()
+    return scenes
+
 def rule_for(filename):
     """ファイル名に合う字幕・開始位置・最大秒数を返す"""
     for kw, subs, skip, cap in CH3_RULES:
@@ -401,16 +437,48 @@ def list_materials(d):
         files += glob.glob(os.path.join(d, "*" + e))
     return sorted(set(files), key=natural_key)
 
-def build_ch3(materials, xfade=0.5, mute=True):
+def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
     """素材動画からChapter3を構成。素材が無ければ None を返す。
     字幕・使う範囲は CH3_RULES（ファイル名のキーワード）で決める。"""
     from moviepy import VideoFileClip, ImageClip, CompositeVideoClip, concatenate_videoclips
     from moviepy.video.fx import CrossFadeIn
     if not materials:
         return None, []
+    from moviepy import VideoFileClip as _VFC
+    scenes = scenes or {}
     segments, used = [], []
+
+    # シーン.txt の指定がある動画は、そこだけを切り出して使う
+    for key, marks in scenes.items():
+        hit = [p for p in materials if key in os.path.basename(p)]
+        if not hit:
+            print("   シーン.txt の「%s」に合う動画が見つかりません" % key)
+            continue
+        path = hit[0]; name = os.path.basename(path)
+        try:
+            v = _VFC(path)
+        except Exception as ex:
+            print("  読み込み失敗: %s (%s)" % (name, ex)); continue
+        if mute:
+            v = v.without_audio()
+        v = v.resized(width=W)
+        if v.h < H:
+            v = v.resized(height=H)
+        if (v.w, v.h) != (W, H):
+            v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
+        for start, text, length in marks:
+            if start >= v.duration:
+                print("   指定が動画の長さを超えています: %s %.0f秒" % (name, start)); continue
+            seg = v.subclipped(start, min(start + length, v.duration))
+            ov = ImageClip(np.array(subtitle_overlay(text)), transparent=True).with_duration(seg.duration)
+            segments.append(CompositeVideoClip([seg, ov]).with_duration(seg.duration))
+            print("   %-18s %6.1f秒から %2.0f秒  %s" % (name[:18], start, seg.duration, text[:24]))
+        used.append((name, sum(m[2] for m in marks)))
+
     for path in materials:
         name = os.path.basename(path)
+        if scenes and any(k in name for k in scenes):
+            continue                      # シーン指定済みなので重ねて使わない
         if any(k in name for k in CH3_EXCLUDE):
             print("   除外（通しの記録映像）: %s" % name)
             continue
@@ -489,7 +557,11 @@ def main():
     clips = to_clips(timeline(args.materials))
 
     print("Chapter 3 を生成中…")
-    ch3, used = build_ch3(materials, XF)
+    scenes = parse_scenes(args.materials)
+    if scenes:
+        print("  シーン.txt を読み込みました（%d本 / %d カット）"
+              % (len(scenes), sum(len(v) for v in scenes.values())))
+    ch3, used = build_ch3(materials, XF, scenes=scenes)
     clips += to_clips([(ch3_title(), 5)])
     if ch3 is None:
         used = []
