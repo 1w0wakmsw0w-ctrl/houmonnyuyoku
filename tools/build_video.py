@@ -11,7 +11,7 @@
                            --bgm ~/Desktop/bgm.mp3 \
                            --out ~/Desktop/訪問入浴_紹介動画.mp4
 """
-import argparse, os, sys, glob
+import argparse, os, sys, glob, re
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
@@ -193,13 +193,33 @@ def ch2_closing():
 # ---------- Chapter 3：訪問の始まりと感染対策（素材動画／字幕） ----------
 # 素材はファイル名の昇順に並べ、下の順で字幕を割り当てる。
 # 1本のクリップに複数の字幕を置く場合はリストで指定（尺を等分する）。
-CH3_PLAN = [
-    ["訪問入浴は、スタッフがご自宅にお伺いするところから始まります。",
-     "専用浴槽と給湯設備を、車両から居室へ運び込みます。"],
-    ["ご利用者やご家族に感染の疑いがある場合は、防護具を着用して訪問します。"],
-    ["ガウン・手袋・マスク・キャップ。感染を広げないための備えです。"],
+# 素材のファイル名に含まれる語で字幕を決める。
+#   (キーワード, [字幕...], 頭を飛ばす割合, 使う最大秒数)
+CH3_RULES = [
+    # 具体的な語を先に置く（「背部洗体」が「洗体」に先取りされないように）
+    ("玄関前訪問",     ["訪問入浴は、スタッフ3名でご自宅にお伺いするところから始まります。"], 0.0, 12),
+    ("入室",           ["ご挨拶をして、その日の体調をうかがいます。"],                     0.0, 12),
+    ("前半ダメ",       ["浴槽の準備を進めます。"],                                        0.5, 16),
+    ("浴槽完成",       ["外回りで給湯の準備をし、専用浴槽を組み立てます。",
+                        "準備が整うまで、およそ15分です。"],                              0.0, 24),
+    ("キッチン",       ["給湯は、屋内の給湯設備または車両から行います。"],                 0.0, 12),
+    ("洗髪",           ["お湯に体を預けたまま、洗髪を行います。"],                         0.0, 16),
+    ("洗顔",           ["お顔も、蒸したタオルでやさしく拭きます。"],                       0.0, 12),
+    ("背部",           ["姿勢を変えながら、背中まで洗い流します。"],                       0.0, 16),
+    ("洗体",           ["全身をていねいに洗います。"],                                     0.0, 16),
+    ("頭元",           ["声をかけながら、表情を確かめて進めます。"],                       0.0, 12),
+    ("防護服でのケア", ["防護具を着けたまま、通常どおりのケアを行います。"],               0.0, 12),
+    ("防護服",         ["ご利用者やご家族に感染の疑いがある場合は、防護具を着用します。"],  0.0, 12),
+    ("片付け",         ["入浴後はベッドへお戻しし、機材を片付けて元どおりにします。"],     0.0, 16),
 ]
 CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
+
+def rule_for(filename):
+    """ファイル名に合う字幕・開始位置・最大秒数を返す"""
+    for kw, subs, skip, cap in CH3_RULES:
+        if kw in filename:
+            return subs, skip, cap
+    return [CH3_FALLBACK], 0.0, 12
 
 def ch3_title():
     img = canvas(NAVY); d = ImageDraw.Draw(img)
@@ -250,7 +270,7 @@ def subtitle_overlay(text):
 
 def ch3_placeholder():
     """素材が無い場合の代替スライド"""
-    subs = [s for group in CH3_PLAN for s in group]
+    subs = [t for _, ts, _, _ in CH3_RULES for t in ts][:6]
     out = []
     for n in range(1, len(subs) + 1):
         img = canvas(NAVY); d = ImageDraw.Draw(img)
@@ -367,28 +387,41 @@ def timeline_tail():
 
 VIDEO_EXT = (".mp4", ".mov", ".m4v", ".avi", ".mts", ".MP4", ".MOV", ".M4V", ".AVI", ".MTS")
 
+def natural_key(path):
+    """「2」「10」を数字として並べる（文字列順だと 10 が 2 より前に来るため）"""
+    name = os.path.basename(path)
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", name)]
+
 def list_materials(d):
     if not d or not os.path.isdir(d):
         return []
     files = []
     for e in VIDEO_EXT:
         files += glob.glob(os.path.join(d, "*" + e))
-    return sorted(set(files))
+    return sorted(set(files), key=natural_key)
 
 def build_ch3(materials, xfade=0.5, mute=True):
     """素材動画からChapter3を構成。素材が無ければ None を返す。
-    CH3_PLAN の順に字幕を割り当て、1クリップに複数字幕がある場合は尺を等分する。"""
+    字幕・使う範囲は CH3_RULES（ファイル名のキーワード）で決める。"""
     from moviepy import VideoFileClip, ImageClip, CompositeVideoClip, concatenate_videoclips
     from moviepy.video.fx import CrossFadeIn
     if not materials:
         return None, []
     segments, used = [], []
-    for i, path in enumerate(materials):
+    for path in materials:
+        name = os.path.basename(path)
         try:
             v = VideoFileClip(path)
         except Exception as ex:
-            print("  読み込み失敗: %s (%s)" % (os.path.basename(path), ex))
+            print("  読み込み失敗: %s (%s)" % (name, ex))
             continue
+        subs, skip, cap = rule_for(name)
+        start = v.duration * skip
+        end = min(start + cap, v.duration)
+        if end - start < 1.0:
+            print("  短すぎるため除外: %s" % name)
+            continue
+        v = v.subclipped(start, end)
         if mute:
             v = v.without_audio()
         v = v.resized(width=W)
@@ -396,13 +429,13 @@ def build_ch3(materials, xfade=0.5, mute=True):
             v = v.resized(height=H)
         if (v.w, v.h) != (W, H):
             v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
-        subs = CH3_PLAN[i] if i < len(CH3_PLAN) else [CH3_FALLBACK]
         part = v.duration / len(subs)
         for j, text in enumerate(subs):
             seg = v.subclipped(j * part, min((j + 1) * part, v.duration))
             ov = ImageClip(np.array(subtitle_overlay(text)), transparent=True).with_duration(seg.duration)
             segments.append(CompositeVideoClip([seg, ov]).with_duration(seg.duration))
-        used.append((os.path.basename(path), round(v.duration, 1)))
+        used.append((name, round(v.duration, 1)))
+        print("   %-34s %4.1f秒  %s" % (name[:34], v.duration, subs[0][:22]))
     if not segments:
         return None, []
     segments = [c if i == 0 else c.with_effects([CrossFadeIn(xfade)])
