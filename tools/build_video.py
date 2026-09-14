@@ -201,14 +201,18 @@ CH3_RULES = [
     ("入室",           ["ご挨拶をして、その日の体調をうかがいます。"],                     0.0, 12),
     ("前半ダメ",       ["浴槽の準備を進めます。"],                                        0.5, 16),
     ("浴槽完成",       ["外回りで給湯の準備をし、専用浴槽を組み立てます。",
-                        "準備が整うまで、およそ15分です。"],                              0.0, 24),
-        ("洗髪",           ["お湯に体を預けたまま、洗髪を行います。"],                         0.0, 16),
-    ("洗顔",           ["お顔も、蒸したタオルでやさしく拭きます。"],                       0.0, 12),
-    ("背部",           ["姿勢を変えながら、背中まで洗い流します。"],                       0.0, 16),
-    ("洗体",           ["全身をていねいに洗います。"],                                     0.0, 16),
+                        "準備が整うまで、およそ15分です。"],                              0.0, 28),
+        ("洗髪",           ["お湯に体を預けたまま、洗髪を行います。",
+                        "首まで湯に浸かった、いちばん心地よい時間です。"],                 0.0, 34),
+    ("洗顔",           ["お顔も、蒸したタオルでやさしく拭きます。"],                       0.0, 18),
+    ("背部",           ["姿勢を変えながら、背中まで洗い流します。",
+                        "ご自宅の浴槽では届かないところまで、しっかりと。"],               0.0, 32),
+    ("洗体",           ["全身をていねいに洗います。",
+                        "3名で支えるので、ご本人にもご家族にも負担がかかりません。"],     0.0, 32),
     ("防護服でのケア", ["防護具を着けたまま、通常どおりのケアを行います。"],               0.0, 12),
     ("防護服",         ["ご利用者やご家族に感染の疑いがある場合は、防護具を着用します。"],  0.0, 12),
-    ("片付け",         ["入浴後はベッドへお戻しし、機材を片付けて元どおりにします。"],     0.0, 16),
+    ("片付け",         ["入浴後はベッドへお戻しし、機材を片付けて元どおりにします。",
+                        "お部屋は、お伺いする前の状態に戻してお返しします。"],             0.0, 28),
 ]
 CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 
@@ -430,29 +434,17 @@ def ch6_frames():
 # ---------- タイムライン ----------
 # (画像生成関数, 表示秒数) の列。秒数を変えれば尺を調整できる。
 def timeline(materials_dir):
-    seq = []   # [(PIL.Image, duration)]
+    """本編前半。(画像, 表示秒数) の列。秒数を変えれば尺を調整できる。"""
+    seq = []
     # Ch1：課題提起（約60秒）
     for img, d in zip(ch1_frames(), [12, 14, 16, 18]):
         seq.append((img, d))
-    # Ch2：比較・差別化（約120秒）
-    seq.append((cmp_table(0), 3))
-    for r in range(1, len(CMP_ROWS) + 1):
-        seq.append((cmp_table(r), 2.5))
-    seq.append((cmp_table(7), 35))
-    seq.append((cmp_table(7, highlight=True), 35))
-    seq.append((ch2_closing(), 25))
     return seq
 
 def timeline_tail():
     seq = []
-    # Ch4：看護師の視点（約60秒）
+    # Ch3：看護師の視点（約60秒）
     for img, d in zip(ch4_frames(), [6, 9, 9, 9, 9, 18]):
-        seq.append((img, d))
-    # Ch5：利用者・家族の声（約30秒）
-    for img, d in zip(ch5_frames(), [13, 17]):
-        seq.append((img, d))
-    # Ch6：連携のご案内（約30秒）
-    for img, d in zip(ch6_frames(), [13, 17]):
         seq.append((img, d))
     return seq
 
@@ -548,22 +540,39 @@ def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
                 for i, c in enumerate(segments)]
     return concatenate_videoclips(segments, padding=-xfade, method="compose"), used
 
-def add_bgm(video, bgm_path, volume=0.22):
+def add_audio(video, bgm_path, narration_path=None, bgm_volume=0.22):
+    """BGMとナレーションを重ねる。ナレーションがある場合はBGMを下げる。"""
     from moviepy import AudioFileClip, CompositeAudioClip, concatenate_audioclips
-    if not bgm_path or not os.path.exists(bgm_path):
-        return video, False
-    a = AudioFileClip(bgm_path)
-    if a.duration < video.duration:                      # 尺が足りなければ繰り返す
-        n = int(video.duration // a.duration) + 1
-        a = concatenate_audioclips([AudioFileClip(bgm_path) for _ in range(n)])
-    a = a.subclipped(0, video.duration).with_volume_scaled(volume)
-    video = video.with_audio(CompositeAudioClip([video.audio, a]) if video.audio else a)
-    return video, True
+    tracks, has_bgm, has_nar = [], False, False
+    if video.audio:
+        tracks.append(video.audio)
+
+    if narration_path and os.path.exists(narration_path):
+        nar = AudioFileClip(narration_path)
+        if nar.duration > video.duration:
+            nar = nar.subclipped(0, video.duration)
+        tracks.append(nar)
+        has_nar = True
+        bgm_volume = min(bgm_volume, 0.10)   # 声を邪魔しない音量まで下げる
+
+    if bgm_path and os.path.exists(bgm_path):
+        a = AudioFileClip(bgm_path)
+        if a.duration < video.duration:                  # 尺が足りなければ繰り返す
+            n = int(video.duration // a.duration) + 1
+            a = concatenate_audioclips([AudioFileClip(bgm_path) for _ in range(n)])
+        tracks.append(a.subclipped(0, video.duration).with_volume_scaled(bgm_volume))
+        has_bgm = True
+
+    if tracks:
+        video = video.with_audio(tracks[0] if len(tracks) == 1 else CompositeAudioClip(tracks))
+    return video, has_bgm, has_nar
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--materials", default=os.path.expanduser("~/Desktop/動画サンプル"))
     ap.add_argument("--bgm", default=os.path.expanduser("~/Desktop/bgm.mp3"))
+    ap.add_argument("--narration", default="narration.mp3",
+                    help="ナレーションの音声ファイル。あれば重ね、BGMを自動で下げる")
     ap.add_argument("--out", default=os.path.expanduser("~/Desktop/訪問入浴_紹介動画.mp4"))
     ap.add_argument("--preview", action="store_true", help="各スライド1秒の確認用短尺")
     ap.add_argument("--thumbs", action="store_true",
@@ -629,8 +638,9 @@ def main():
     clips = [c if i == 0 else c.with_effects([CrossFadeIn(XF)]) for i, c in enumerate(clips)]
     video = concatenate_videoclips(clips, padding=-XF, method="compose")
 
-    video, has_bgm = add_bgm(video, args.bgm)
+    video, has_bgm, has_nar = add_audio(video, args.bgm, args.narration)
     print("BGM: %s" % ("あり（%s）" % os.path.basename(args.bgm) if has_bgm else "なし"))
+    print("ナレーション: %s" % ("あり（%s）" % os.path.basename(args.narration) if has_nar else "なし"))
 
     total = video.duration
     print("書き出し中… 予定尺 %d:%02d → %s" % (int(total // 60), int(total % 60), args.out))
@@ -643,6 +653,7 @@ def main():
     print("解像度/fps  : %dx%d / %dfps" % (W, H, FPS))
     print("使用した素材: %s" % (", ".join("%s(%ss)" % u for u in used) if used else "なし（全チャプターを生成スライドで構成）"))
     print("BGM         : %s" % ("あり" if has_bgm else "なし"))
+    print("ナレーション: %s" % ("あり" if has_nar else "なし"))
     print("出力        : %s" % args.out)
 
 if __name__ == "__main__":
