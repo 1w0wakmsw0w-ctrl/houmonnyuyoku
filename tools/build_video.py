@@ -103,92 +103,71 @@ def chapter_title(num, name, bg=NAVY, fg=WHITE):
 # ---------- Chapter 1：課題提起 ----------
 CH1_LINES = [
     "お風呂に入りたい。",
-    "その当たり前の願いが、叶えられない方がいます。",
+    "その当たり前の願いが、叶えられない日々が続いている方がいます。",
     "在宅での入浴は、単なる清潔ケアではありません。",
     "温かいお湯に浸かるその時間が、その人の生きる意欲を支えています。",
 ]
+CH1_HOLD = 6           # 1文あたりの表示秒数（読み終えてから次が出るまでの間）
+CH1_BG_PREFER = ["洗髪", "浴槽完成", "洗体", "玄関前訪問"]   # 背景に使う映像の優先順
+
+def ch1_overlay(n):
+    """背景映像の上に重ねる文字（RGBA）。暗幕＋テキスト。"""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, W, H], fill=(10, 32, 48, 175))        # 文字を読ませるための暗幕
+    y = 380
+    f_big, f_sub = F(76), F(46)
+    for i, s in enumerate(CH1_LINES[:n]):
+        f = f_big if i == 0 else f_sub
+        for ln in wrap(d, s, f, W - 360):
+            center_text(d, y, ln, f, WHITE if i == 0 else (219, 233, 242))
+            y += int(f.size * 1.5)
+        if i == 0:
+            accent_bar(d, y + 10, MINT); y += 70
+        else:
+            y += 20
+    return img
 
 def ch1_frames():
-    """1行ずつ積み上げて表示"""
+    """背景映像が無いときの代替（単色背景）"""
     out = []
     for n in range(1, len(CH1_LINES) + 1):
-        img = canvas(NAVY); d = ImageDraw.Draw(img)
-        # 1行目だけ大きく
-        y = 360
-        center_text(d, y, CH1_LINES[0], F(78), WHITE)
-        y += 150
-        accent_bar(d, y, MINT); y += 60
-        for s in CH1_LINES[1:n]:
-            for ln in wrap(d, s, F(44), W - 400):
-                center_text(d, y, ln, F(44), (214, 230, 240))
-                y += 72
-            y += 16
-        out.append(img)
+        base = Image.new("RGBA", (W, H), NAVY + (255,))
+        out.append(Image.alpha_composite(base, ch1_overlay(n)).convert("RGB"))
     return out
 
-# ---------- Chapter 2：比較表 ----------
-CMP_HEAD = ["項目", "訪問入浴", "デイ入浴", "清拭・部分浴"]
-CMP_ROWS = [
-    ("自宅で受けられる",     "o", "x", "o"),
-    ("全身浴ができる",       "o", "o", "x"),
-    ("看護師が同行",         "o", "t", "t"),
-    ("重度・寝たきり対応",   "o", "t", "t"),
-    ("移動・外出が不要",     "o", "x", "o"),
-    ("バイタル・皮膚観察",   "o", "t", "x"),
-    ("在宅チームへ情報共有", "o", "o", "o"),
-]
-MARK = {"o": ("✓", GREEN), "x": ("×", GRAY), "t": ("△", AMBER)}
-
-def cmp_table(n_rows, highlight=False):
-    """n_rows 行まで表示した比較表"""
-    img = canvas(WHITE); d = ImageDraw.Draw(img)
-    center_text(d, 70, "入浴支援サービスの比較", F(56), NAVY)
-
-    tw, x0, y0 = 1500, 210, 200
-    colw = [520, 340, 320, 320]
-    rowh = 92
-    # 訪問入浴列のハイライト帯
-    hx = x0 + colw[0]
-    d.rectangle([hx, y0, hx + colw[1], y0 + rowh * (len(CMP_ROWS) + 1)], fill=TINTG)
-    # ヘッダー
-    d.rectangle([x0, y0, x0 + tw, y0 + rowh], fill=NAVY)
-    d.rectangle([hx, y0, hx + colw[1], y0 + rowh], fill=GREEN)
-    cx = x0
-    for i, h in enumerate(CMP_HEAD):
-        f = F(36)
-        d.text((cx + (colw[i] - text_w(d, h, f)) / 2, y0 + 26), h, font=f, fill=WHITE)
-        cx += colw[i]
-    # 行
-    for r in range(n_rows):
-        label, *marks = CMP_ROWS[r]
-        ry = y0 + rowh * (r + 1)
-        d.line([(x0, ry + rowh), (x0 + tw, ry + rowh)], fill=LINE, width=2)
-        d.text((x0 + 28, ry + 26), label, font=F(34), fill=TEXT)
-        cx = x0 + colw[0]
-        for i, m in enumerate(marks):
-            ch, col = MARK[m]
-            f = F(46)
-            d.text((cx + (colw[i + 1] - text_w(d, ch, f)) / 2, ry + 18), ch, font=f, fill=col)
-            cx += colw[i + 1]
-    # 凡例
-    ly = y0 + rowh * (len(CMP_ROWS) + 1) + 34
-    legend = [("✓", GREEN, "対応できる"), ("△", AMBER, "事業所・状態により異なる"), ("×", GRAY, "対応が難しい")]
-    lx = x0 + 10
-    for ch, col, note in legend:
-        d.text((lx, ly), ch, font=F(30), fill=col); lx += 44
-        d.text((lx, ly + 4), note, font=F(26), fill=SUB); lx += text_w(d, note, F(26)) + 60
-    if highlight:
-        d.rounded_rectangle([hx - 6, y0 - 6, hx + colw[1] + 6, y0 + rowh * (len(CMP_ROWS) + 1) + 6],
-                            10, outline=GREEN, width=6)
-    return img
-
-def ch2_closing():
-    img = canvas(WHITE); d = ImageDraw.Draw(img)
-    center_text(d, 300, "自宅で・全身浴を・看護師付きで・重度でも", F(64), NAVY)
-    accent_bar(d, 430); 
-    center_text(d, 500, "この4条件を満たすのは、", F(56), TEXT)
-    center_text(d, 600, "訪問入浴だけです。", F(76), GREEN)
-    return img
+def build_ch1(materials, xfade=0.4):
+    """素材があれば映像を背景に、無ければ単色スライドでChapter1を作る"""
+    from moviepy import VideoFileClip, ImageClip, CompositeVideoClip, concatenate_videoclips
+    from moviepy.video.fx import CrossFadeIn
+    pick = None
+    for kw in CH1_BG_PREFER:
+        hit = [m for m in materials if kw in os.path.basename(m)]
+        if hit:
+            pick = hit[0]; break
+    if not pick:
+        return None
+    try:
+        v = VideoFileClip(pick).without_audio()
+    except Exception as ex:
+        print("  背景映像の読み込み失敗: %s" % ex); return None
+    need = CH1_HOLD * len(CH1_LINES)
+    v = v.resized(width=W)
+    if v.h < H:
+        v = v.resized(height=H)
+    if (v.w, v.h) != (W, H):
+        v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
+    if v.duration < need:                                     # 足りなければ繰り返す
+        v = concatenate_videoclips([v] * (int(need // v.duration) + 1))
+    v = v.subclipped(0, need)
+    print("   Chapter1の背景: %s" % os.path.basename(pick))
+    segs = []
+    for i in range(len(CH1_LINES)):
+        seg = v.subclipped(i * CH1_HOLD, (i + 1) * CH1_HOLD)
+        ov = ImageClip(np.array(ch1_overlay(i + 1)), transparent=True).with_duration(seg.duration)
+        c = CompositeVideoClip([seg, ov]).with_duration(seg.duration)
+        segs.append(c if i == 0 else c.with_effects([CrossFadeIn(xfade)]))
+    return concatenate_videoclips(segs, padding=-xfade, method="compose")
 
 # ---------- Chapter 3：訪問の始まりと感染対策（素材動画／字幕） ----------
 # 素材はファイル名の昇順に並べ、下の順で字幕を割り当てる。
@@ -434,17 +413,13 @@ def ch6_frames():
 # ---------- タイムライン ----------
 # (画像生成関数, 表示秒数) の列。秒数を変えれば尺を調整できる。
 def timeline(materials_dir):
-    """本編前半。(画像, 表示秒数) の列。秒数を変えれば尺を調整できる。"""
-    seq = []
-    # Ch1：課題提起（約60秒）
-    for img, d in zip(ch1_frames(), [12, 14, 16, 18]):
-        seq.append((img, d))
-    return seq
+    """Chapter1の代替（背景映像が使えない場合）"""
+    return [(img, CH1_HOLD) for img in ch1_frames()]
 
 def timeline_tail():
     seq = []
     # Ch3：看護師の視点（約60秒）
-    for img, d in zip(ch4_frames(), [6, 9, 9, 9, 9, 18]):
+    for img, d in zip(ch4_frames(), [4, 5, 5, 5, 5, 10]):
         seq.append((img, d))
     return seq
 
@@ -540,6 +515,23 @@ def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
                 for i, c in enumerate(segments)]
     return concatenate_videoclips(segments, padding=-xfade, method="compose"), used
 
+def find_audio(path, stem, search_dirs):
+    """指定パスに無ければ、同じ場所で stem.* を探す。
+    Windowsで拡張子が隠れていると bgm.mp3.mp3 になりがちなので、その救済も兼ねる。"""
+    if path and os.path.exists(path):
+        return path
+    exts = (".mp3", ".m4a", ".wav", ".aac", ".mp4", ".mp3.mp3")
+    for d in search_dirs:
+        if not d or not os.path.isdir(d):
+            continue
+        for f in sorted(os.listdir(d)):
+            low = f.lower()
+            if low.startswith(stem) and low.endswith(exts):
+                found = os.path.join(d, f)
+                print("   %s を %s として使います" % (f, stem))
+                return found
+    return None
+
 def add_audio(video, bgm_path, narration_path=None, bgm_volume=0.22):
     """BGMとナレーションを重ねる。ナレーションがある場合はBGMを下げる。"""
     from moviepy import AudioFileClip, CompositeAudioClip, concatenate_audioclips
@@ -577,7 +569,8 @@ def main():
     ap.add_argument("--preview", action="store_true", help="各スライド1秒の確認用短尺")
     ap.add_argument("--thumbs", action="store_true",
                     help="動画を作らず、素材の内容一覧（時刻入り）を書き出す")
-    ap.add_argument("--every", type=int, default=30, help="一覧画像の間隔（秒）")
+    ap.add_argument("--every", type=int, default=0,
+                    help="一覧画像の間隔（秒）。0なら長さに応じて自動（1本あたり約12枚）")
     args = ap.parse_args()
 
     from moviepy import ImageClip, concatenate_videoclips
@@ -600,7 +593,11 @@ def main():
             base = os.path.splitext(os.path.basename(m))[0]
             out = os.path.join(args.materials, base + "_一覧.jpg")
             print("  %s を確認中…" % os.path.basename(m))
-            r = contact_sheet(m, out, every=args.every)
+            ev = args.every
+            if ev <= 0:
+                from moviepy import VideoFileClip as _V
+                _v = _V(m); ev = max(2, int(_v.duration / 12) or 2); _v.close()
+            r = contact_sheet(m, out, every=ev)
             if r:
                 print("   → %s（%d枚 / 全体 %d:%02d）"
                       % (os.path.basename(out), r[1], int(r[2]) // 60, int(r[2]) % 60))
@@ -615,8 +612,9 @@ def main():
             cs.append(ImageClip(np.array(img)).with_duration(d))
         return cs
 
-    print("Chapter 1・2 を生成中…")
-    clips = to_clips(timeline(args.materials))
+    print("Chapter 1 を生成中…")
+    ch1 = None if args.preview else build_ch1(materials, XF)
+    clips = [ch1] if ch1 is not None else to_clips(timeline(args.materials))
 
     print("Chapter 3 を生成中…")
     scenes = parse_scenes(args.materials)
@@ -638,9 +636,15 @@ def main():
     clips = [c if i == 0 else c.with_effects([CrossFadeIn(XF)]) for i, c in enumerate(clips)]
     video = concatenate_videoclips(clips, padding=-XF, method="compose")
 
-    video, has_bgm, has_nar = add_audio(video, args.bgm, args.narration)
-    print("BGM: %s" % ("あり（%s）" % os.path.basename(args.bgm) if has_bgm else "なし"))
-    print("ナレーション: %s" % ("あり（%s）" % os.path.basename(args.narration) if has_nar else "なし"))
+    here = os.path.dirname(os.path.abspath(args.out)) or "."
+    dirs = [here, os.path.dirname(os.path.abspath(__file__)), args.materials]
+    bgm = find_audio(args.bgm, "bgm", dirs)
+    nar = find_audio(args.narration, "narration", dirs)
+    if not bgm:
+        print("   BGMのファイルが見つかりません（bgm.mp3 をこのフォルダに置いてください）")
+    video, has_bgm, has_nar = add_audio(video, bgm, nar)
+    print("BGM: %s" % ("あり（%s）" % os.path.basename(bgm) if has_bgm else "なし"))
+    print("ナレーション: %s" % ("あり（%s）" % os.path.basename(nar) if has_nar else "なし"))
 
     total = video.duration
     print("書き出し中… 予定尺 %d:%02d → %s" % (int(total // 60), int(total % 60), args.out))
