@@ -196,7 +196,7 @@ CH3_RULES = [
 CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 
 # 通しで撮った固定カメラの記録。各シーンの素材と内容が重複するため使わない
-CH3_EXCLUDE = ["キッチン", "頭元"]
+CH3_EXCLUDE = ["キッチン", "前半ダメ"]   # 頭元はシーン.txtで位置指定して使う
 
 def contact_sheet(path, out_path, every=30, cols=5, thumb_w=384):
     """動画を一定間隔で切り出し、時刻入りの一覧画像を作る。
