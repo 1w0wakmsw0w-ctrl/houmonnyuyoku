@@ -51,8 +51,9 @@ echo 必要なものを確認しています（初回のみ数分かかります
 if errorlevel 1 ( echo [エラー] 導入に失敗しました。 & pause & exit /b 1 )
 
 echo.
-%PY% make_narration.py --voice %VOICE%
+%PY% make_narration.py --voice %VOICE% --length 7:06
 echo.
-echo 「ナレーション」フォルダを開いて、音声を確認してください。
+echo 「ナレーション」フォルダの narration_timed.mp3 を
+echo DaVinci の 0:00 に置けば、そのまま合います。
 echo 気に入らなければ、声を変えてもう一度実行できます。
 pause
