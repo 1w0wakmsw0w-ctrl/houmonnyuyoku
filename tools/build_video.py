@@ -108,6 +108,7 @@ CH1_LINES = [
     "温かいお湯に浸かるその時間が、その人の生きる意欲を支えています。",
 ]
 CH1_HOLD = 6           # 1文あたりの表示秒数（読み終えてから次が出るまでの間）
+CH1_USE_VIDEO_BG = False   # True にすると冒頭の背景に映像を敷く
 CH1_BG_PREFER = ["洗髪", "浴槽完成", "洗体", "玄関前訪問"]   # 背景に使う映像の優先順
 
 def ch1_overlay(n):
@@ -563,6 +564,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--materials", default=os.path.expanduser("~/Desktop/動画サンプル"))
     ap.add_argument("--bgm", default=os.path.expanduser("~/Desktop/bgm.mp3"))
+    ap.add_argument("--no-bgm", action="store_true", help="BGMを付けない")
     ap.add_argument("--narration", default="narration.mp3",
                     help="ナレーションの音声ファイル。あれば重ね、BGMを自動で下げる")
     ap.add_argument("--out", default=os.path.expanduser("~/Desktop/訪問入浴_紹介動画.mp4"))
@@ -613,7 +615,7 @@ def main():
         return cs
 
     print("Chapter 1 を生成中…")
-    ch1 = None if args.preview else build_ch1(materials, XF)
+    ch1 = None if (args.preview or not CH1_USE_VIDEO_BG) else build_ch1(materials, XF)
     clips = [ch1] if ch1 is not None else to_clips(timeline(args.materials))
 
     print("Chapter 3 を生成中…")
@@ -622,7 +624,7 @@ def main():
         print("  シーン.txt を読み込みました（%d本 / %d カット）"
               % (len(scenes), sum(len(v) for v in scenes.values())))
     ch3, used = build_ch3(materials, XF, scenes=scenes)
-    clips += to_clips([(ch3_title(), 5)])
+    # チャプター見出しは出さず、冒頭から実写へそのままつなぐ
     if ch3 is None:
         used = []
         clips += to_clips([(i, 1.0 if args.preview else 24) for i in ch3_placeholder()])
@@ -638,9 +640,11 @@ def main():
 
     here = os.path.dirname(os.path.abspath(args.out)) or "."
     dirs = [here, os.path.dirname(os.path.abspath(__file__)), args.materials]
-    bgm = find_audio(args.bgm, "bgm", dirs)
+    bgm = None if args.no_bgm else find_audio(args.bgm, "bgm", dirs)
     nar = find_audio(args.narration, "narration", dirs)
-    if not bgm:
+    if args.no_bgm:
+        print("   BGMなしで作成します（--no-bgm）")
+    elif not bgm:
         print("   BGMのファイルが見つかりません（bgm.mp3 をこのフォルダに置いてください）")
     video, has_bgm, has_nar = add_audio(video, bgm, nar)
     print("BGM: %s" % ("あり（%s）" % os.path.basename(bgm) if has_bgm else "なし"))
