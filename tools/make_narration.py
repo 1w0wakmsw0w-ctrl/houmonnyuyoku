@@ -76,6 +76,10 @@ def main():
     ap.add_argument("--pitch", default="+0Hz", help="声の高さ。例 -20Hz で低く")
     ap.add_argument("--gap", type=float, default=1.2, help="つないだ音声の行間（秒）")
     ap.add_argument("--length", default="", help="動画の長さ。例 7:06（時刻指定があるとき使う）")
+    ap.add_argument("--min-gap", dest="min_gap", type=float, default=0.35,
+                    help="文と文のあいだに最低限あける秒数")
+    ap.add_argument("--no-autofit", action="store_true",
+                    help="重なりを自動で直さない（時刻を書いたとおりに置く）")
     a = ap.parse_args()
 
     voice = VOICES.get(a.voice, a.voice)
@@ -129,47 +133,79 @@ def mmss(sec):
     return "%d:%02d" % (int(sec) // 60, int(sec) % 60)
 
 def build_timed(made, starts, a, made_dir):
-    """時刻どおりに並べた1本を作る。重なりがあれば知らせる。"""
+    """時刻どおりに並べた1本を作る。重なりは実際の長さを見て自動で直す。"""
     try:
         from moviepy import AudioFileClip, CompositeAudioClip
     except Exception as ex:
         print("（時刻どおりの1本は作れませんでした: %s）" % ex)
         return
 
-    clips, spans = [], []
+    entries = []   # [開始秒, クリップ, 名前, 長さ]
     for path, st in zip(made, starts):
         if st is None:
             continue
         c = AudioFileClip(path)
-        spans.append((st, st + c.duration, os.path.basename(path)))
-        clips.append(c.with_start(st))
-    if not clips:
+        entries.append([float(st), c, os.path.basename(path), c.duration])
+    if not entries:
         return
+    entries.sort(key=lambda e: e[0])
 
-    spans.sort()
+    # 重なりの自動解消（前に余裕があれば前倒し、なければ後ろへずらす）
+    moved = []
+    if not a.no_autofit:
+        orig = [e[0] for e in entries]
+        for i in range(1, len(entries)):
+            short = (entries[i - 1][0] + entries[i - 1][3] + a.min_gap) - entries[i][0]
+            if short <= 0:
+                continue
+            prev_end = (entries[i - 2][0] + entries[i - 2][3] + a.min_gap) if i >= 2 else 0.0
+            back = max(0.0, min(short, entries[i - 1][0] - prev_end))
+            if back:
+                entries[i - 1][0] -= back
+                short -= back
+            if short > 0.02:
+                entries[i][0] += short
+        for e, o in zip(entries, orig):
+            if abs(e[0] - o) > 0.02:
+                moved.append((e[2], e[0] - o, mmss(e[0])))
+
     over = []
-    for (s1, e1, n1), (s2, _, n2) in zip(spans, spans[1:]):
-        if e1 > s2 + 0.05:
-            over.append((n1, e1 - s2, mmss(s2)))
+    for x, y in zip(entries, entries[1:]):
+        if x[0] + x[3] > y[0] + 0.05:
+            over.append((x[2], x[0] + x[3] - y[0], mmss(y[0])))
 
-    need = max(e for _, e, _ in spans)
+    need = max(e[0] + e[3] for e in entries)
     length = parse_time(a.length) if a.length else None
     total = max(length or 0, need)
 
     out = os.path.join(made_dir, "narration_timed.mp3")
+    clips = [e[1].with_start(e[0]) for e in entries]
     CompositeAudioClip(clips).with_duration(total).write_audiofile(out, fps=44100, logger=None)
 
-    speech = sum(e - s for s, e, _ in spans)
+    speech = sum(e[3] for e in entries)
     print("\n時刻どおりに並べた1本: %s（%s）" % (out, mmss(total)))
     print("  しゃべっている時間: %s ／ 全体の %d%%" % (mmss(speech), round(speech / total * 100)))
+    if moved:
+        print("  重なりは自動で直しました: %d か所（最大 %.1f 秒ずらしました）"
+              % (len(moved), max(abs(d) for _, d, _ in moved)))
     if over:
-        print("\n[注意] 次の行が、その次の行に重なっています。")
-        print("       読み上げ.txt の時刻を後ろにずらすか、文を短くしてください。")
+        print("\n[注意] まだ重なっている行があります。文を短くしてください。")
         for n, sec, at in over[:12]:
             print("   %s  → %.1f秒ぶん（%s のあたり）" % (n, sec, at))
     else:
         print("  重なりはありません。")
+    if length and need > length + 0.5:
+        print("  [注意] 最後の文が動画より %.1f 秒はみ出します。" % (need - length))
+
+    try:
+        with io.open(os.path.join(made_dir, "調整後の時刻.txt"), "w", encoding="utf-8") as f:
+            for e in entries:
+                f.write("%-7s %-7s %s\n" % (mmss(e[0]), mmss(e[0] + e[3]), e[2]))
+    except Exception:
+        pass
+
     print("\nDaVinci では narration_timed.mp3 を 0:00 に置くだけで合います。")
+
 
 if __name__ == "__main__":
     main()
