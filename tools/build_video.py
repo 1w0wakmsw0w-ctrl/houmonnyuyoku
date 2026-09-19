@@ -247,14 +247,20 @@ def parse_scenes(materials_dir):
     path = os.path.join(materials_dir or "", "シーン.txt")
     if not os.path.exists(path):
         return {}
-    scenes, key = {}, None
+    scenes, key, overlay_keys = {}, None, set()
     for raw in io.open(path, encoding="utf-8-sig"):
         line = raw.strip()
         if not line:
             continue
         if line.startswith("#") or line.startswith("//") or line.startswith("※"):
             continue                                   # コメント行
-        m_key = re.match(r"^[\[［](.+?)[\]］]$", line)
+        m_ov = re.match(r"^[\[［]{2}(.+?)[\]］]{2}$", line)      # [[名前]] = 全編に載せる
+        if m_ov:
+            key = m_ov.group(1).strip()
+            overlay_keys.add(key)
+            scenes.setdefault(key, [])
+            continue
+        m_key = re.match(r"^[\[［](.+?)[\]］]$", line)            # [名前] = 切り出してつなぐ
         if m_key:
             key = m_key.group(1).strip()
             scenes.setdefault(key, [])
@@ -267,7 +273,7 @@ def parse_scenes(materials_dir):
         scenes[key].append((start, m.group(3).strip(), int(m.group(4) or 12)))
     for k in scenes:
         scenes[k].sort()
-    return scenes
+    return scenes, overlay_keys
 
 def rule_for(filename):
     """ファイル名に合う字幕・開始位置・最大秒数を返す"""
@@ -439,7 +445,7 @@ def list_materials(d):
         files += glob.glob(os.path.join(d, "*" + e))
     return sorted(set(files), key=natural_key)
 
-def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
+def build_ch3(materials, xfade=0.5, mute=True, scenes=None, overlay_keys=None, only_scenes=False):
     """素材動画からChapter3を構成。素材が無ければ None を返す。
     字幕・使う範囲は CH3_RULES（ファイル名のキーワード）で決める。"""
     from moviepy import VideoFileClip, ImageClip, CompositeVideoClip, concatenate_videoclips
@@ -448,10 +454,42 @@ def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
         return None, []
     from moviepy import VideoFileClip as _VFC
     scenes = scenes or {}
+    overlay_keys = overlay_keys or set()
     segments, used = [], []
 
-    # シーン.txt の指定がある動画は、そこだけを切り出して使う
+    # [[名前]] … 編集済みの動画を通して流し、指定時刻にテロップだけ載せる
+    for key in list(overlay_keys):
+        hit = [p for p in materials if key in os.path.basename(p)]
+        if not hit:
+            print("   シーン.txt の「%s」に合う動画が見つかりません" % key); continue
+        path = hit[0]; name = os.path.basename(path)
+        try:
+            v = _VFC(path)
+        except Exception as ex:
+            print("  読み込み失敗: %s (%s)" % (name, ex)); continue
+        if mute:
+            v = v.without_audio()
+        v = v.resized(width=W)
+        if v.h < H:
+            v = v.resized(height=H)
+        if (v.w, v.h) != (W, H):
+            v = v.cropped(width=W, height=H, x_center=v.w / 2, y_center=v.h / 2)
+        layers = [v]
+        for start, text, length in scenes.get(key, []):
+            if start >= v.duration:
+                print("   指定が動画の長さを超えています: %.0f秒" % start); continue
+            layers.append(ImageClip(np.array(subtitle_overlay(text)), transparent=True)
+                          .with_duration(min(length, v.duration - start)).with_start(start))
+            print("   %6.1f秒から %2d秒  %s" % (start, length, text[:26]))
+        segments.append(CompositeVideoClip(layers).with_duration(v.duration))
+        used.append((name, round(v.duration, 1)))
+        print("   %s を通して使用（%d:%02d / テロップ%d本）"
+              % (name, int(v.duration) // 60, int(v.duration) % 60, len(scenes.get(key, []))))
+
+    # [名前] … 指定した場面だけを切り出してつなぐ
     for key, marks in scenes.items():
+        if key in overlay_keys:
+            continue
         hit = [p for p in materials if key in os.path.basename(p)]
         if not hit:
             print("   シーン.txt の「%s」に合う動画が見つかりません" % key)
@@ -481,6 +519,8 @@ def build_ch3(materials, xfade=0.5, mute=True, scenes=None):
         name = os.path.basename(path)
         if scenes and any(k in name for k in scenes):
             continue                      # シーン指定済みなので重ねて使わない
+        if only_scenes:
+            continue                      # --only-scenes：指定したものだけ使う
         if any(k in name for k in CH3_EXCLUDE):
             print("   除外（通しの記録映像）: %s" % name)
             continue
@@ -565,6 +605,8 @@ def main():
     ap.add_argument("--materials", default=os.path.expanduser("~/Desktop/動画サンプル"))
     ap.add_argument("--bgm", default=os.path.expanduser("~/Desktop/bgm.mp3"))
     ap.add_argument("--no-bgm", action="store_true", help="BGMを付けない")
+    ap.add_argument("--only-scenes", action="store_true",
+                    help="シーン.txt に書いた動画だけを使う")
     ap.add_argument("--narration", default="narration.mp3",
                     help="ナレーションの音声ファイル。あれば重ね、BGMを自動で下げる")
     ap.add_argument("--out", default=os.path.expanduser("~/Desktop/訪問入浴_紹介動画.mp4"))
@@ -619,11 +661,14 @@ def main():
     clips = [ch1] if ch1 is not None else to_clips(timeline(args.materials))
 
     print("Chapter 3 を生成中…")
-    scenes = parse_scenes(args.materials)
+    scenes, overlay_keys = parse_scenes(args.materials)
     if scenes:
         print("  シーン.txt を読み込みました（%d本 / %d カット）"
               % (len(scenes), sum(len(v) for v in scenes.values())))
-    ch3, used = build_ch3(materials, XF, scenes=scenes)
+    if overlay_keys:
+        print("  全編に載せる指定: %s" % "、".join(sorted(overlay_keys)))
+    ch3, used = build_ch3(materials, XF, scenes=scenes, overlay_keys=overlay_keys,
+                          only_scenes=args.only_scenes or bool(overlay_keys))
     # チャプター見出しは出さず、冒頭から実写へそのままつなぐ
     if ch3 is None:
         used = []
