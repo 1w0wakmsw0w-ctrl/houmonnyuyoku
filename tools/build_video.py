@@ -199,6 +199,22 @@ CH3_FALLBACK = "訪問入浴介護の実際の様子です。"
 # 通しで撮った固定カメラの記録。各シーンの素材と内容が重複するため使わない
 CH3_EXCLUDE = ["キッチン", "前半ダメ"]   # 頭元はシーン.txtで位置指定して使う
 
+def write_srt(scenes, out_path):
+    """シーン.txt から字幕ファイル（.srt）を書き出す。
+    DaVinci Resolve などの編集ソフトに読み込んでテロップにできる。"""
+    def ts(sec):
+        h = int(sec // 3600); m = int(sec % 3600 // 60)
+        s2 = int(sec % 60); ms = int(round((sec - int(sec)) * 1000))
+        return "%02d:%02d:%02d,%03d" % (h, m, s2, ms)
+    marks = []
+    for v in scenes.values():
+        marks.extend(v)
+    marks.sort()
+    with io.open(out_path, "w", encoding="utf-8") as f:
+        for i, (start, text, length) in enumerate(marks, 1):
+            f.write("%d\n%s --> %s\n%s\n\n" % (i, ts(start), ts(start + length), text))
+    return len(marks)
+
 def contact_sheet(path, out_path, every=30, cols=5, thumb_w=384):
     """動画を一定間隔で切り出し、時刻入りの一覧画像を作る。
     どの時間に何が映っているかを見ながら シーン.txt を書くために使う。"""
@@ -605,6 +621,8 @@ def main():
     ap.add_argument("--materials", default=os.path.expanduser("~/Desktop/動画サンプル"))
     ap.add_argument("--bgm", default=os.path.expanduser("~/Desktop/bgm.mp3"))
     ap.add_argument("--no-bgm", action="store_true", help="BGMを付けない")
+    ap.add_argument("--srt", action="store_true",
+                    help="動画を作らず、字幕ファイル（.srt）だけを書き出す")
     ap.add_argument("--only-scenes", action="store_true",
                     help="シーン.txt に書いた動画だけを使う")
     ap.add_argument("--narration", default="narration.mp3",
@@ -628,6 +646,16 @@ def main():
           "" if materials else "（Chapter3はテキストスライドで代替します）"))
     for m in materials:
         print("   - %s" % os.path.basename(m))
+
+    if args.srt:
+        sc, _ = parse_scenes(args.materials)
+        if not sc:
+            print("シーン.txt が見つかりません（動画サンプルフォルダに置いてください）"); return
+        out = os.path.join(os.path.dirname(os.path.abspath(args.out)) or ".", "テロップ.srt")
+        n = write_srt(sc, out)
+        print("字幕ファイルを書き出しました: %s（%d本）" % (out, n))
+        print("DaVinci Resolve の「ファイル → 書き出し／読み込み → 字幕」から読み込めます。")
+        return
 
     if args.thumbs:
         if not materials:
