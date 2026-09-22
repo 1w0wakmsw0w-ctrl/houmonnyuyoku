@@ -61,6 +61,28 @@ def read_lines(path):
             out.append((None, line))
     return out
 
+def read_dict(path):
+    """「褥瘡　じょくそう」のような対応表を読む。上から順に置き換える。"""
+    pairs = []
+    if not path or not os.path.exists(path):
+        return pairs
+    for raw in io.open(path, encoding="utf-8-sig"):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = re.split(r"[\s\u3000]+", line, 1)
+        if len(parts) == 2 and parts[0] and parts[1]:
+            pairs.append((parts[0], parts[1]))
+    return pairs
+
+def apply_dict(text, pairs):
+    n = 0
+    for a_, b_ in pairs:
+        if a_ in text:
+            n += text.count(a_)
+            text = text.replace(a_, b_)
+    return text, n
+
 async def synth(text, voice, rate, pitch, out_path):
     import edge_tts
     c = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
@@ -69,6 +91,8 @@ async def synth(text, voice, rate, pitch, out_path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--script", default="読み上げ.txt")
+    ap.add_argument("--dict", dest="dict_path", default="読み方.txt",
+                    help="読み方の対応表。無ければ使わない")
     ap.add_argument("--outdir", default="ナレーション")
     ap.add_argument("--voice", default="ななみ",
                     help="／".join(VOICES) + " または ja-JP-… の正式名")
@@ -92,17 +116,27 @@ def main():
     if timed:
         print("時刻の指定: %d行" % len(timed))
 
+    pairs = read_dict(a.dict_path)
+    if pairs:
+        print("読み方の指定: %d語（%s）" % (len(pairs), a.dict_path))
+
     made = []
+    fixed = 0
     for i, text in enumerate(lines, 1):
         name = "%02d_%s.mp3" % (i, re.sub(r"[^\wぁ-んァ-ン一-龥]", "", text)[:12])
         path = os.path.join(a.outdir, name)
+        spoken, n = apply_dict(text, pairs)
+        fixed += n
         try:
-            asyncio.run(synth(text, voice, a.rate, a.pitch, path))
+            asyncio.run(synth(spoken, voice, a.rate, a.pitch, path))
         except Exception as ex:
             sys.exit("音声の生成に失敗しました: %s\n"
                      "インターネットにつながっているか確認してください。" % ex)
         made.append(path)
         print("  %2d/%d  %s" % (i, len(lines), text[:34]))
+
+    if fixed:
+        print("読み方を %d か所、指定どおりに直しました。" % fixed)
 
     # 1本につないだものも作る（行間に無音を入れる）
     try:
