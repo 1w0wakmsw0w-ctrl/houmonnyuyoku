@@ -31,7 +31,8 @@ t = 1.0
 while t < clip.duration - 0.5:
     f = clip.get_frame(t)
     if cv2.Laplacian(cv2.cvtColor(f, cv2.COLOR_RGB2GRAY), cv2.CV_64F).var() > 60:
-        name = "%02d分%02d秒.jpg" % (int(t) // 60, int(t) % 60)
+        base = os.path.splitext(os.path.basename(VIDEO))[0]
+        name = "%s_%02d分%02d秒.jpg" % (base, int(t) // 60, int(t) % 60)
         if cascades and has_face(f):
             Image.fromarray(f).save("写真/要確認/" + name, quality=92); ng += 1
         else:
