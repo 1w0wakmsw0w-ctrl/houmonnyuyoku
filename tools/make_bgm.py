@@ -53,6 +53,14 @@ MOODS = {
     "bright": {"chords": [[53, 60, 69, 72], [55, 62, 71, 74], [52, 59, 67, 76], [57, 64, 72, 76]],
                "penta":  [76, 79, 81, 84, 86, 88], "dur": 8.0,  "xf": 2.0,
                "bell": 0.20, "arp": 0.13},
+    # warm 明るく軽やか: C → F → G → C（長三和音のみ）。
+    #   パッドを薄くして動きのある音を主役にする。伸ばしっぱなしの和音が
+    #   「お通夜のよう」に聞こえる原因なので、ここを抑えるのが肝心。
+    "warm":   {"chords": [[48, 60, 64, 67], [53, 60, 65, 69],
+                          [55, 62, 67, 71], [48, 60, 64, 67]],
+               "penta":  [72, 74, 76, 79, 81, 84], "dur": 5.0, "xf": 1.2,
+               "bell": 0.22, "arp": 0.34, "pad": 0.40,
+               "arp_step": 0.35, "arp_dur": 0.7},
 }
 CHORDS = MOODS["calm"]["chords"]
 PENTA = MOODS["calm"]["penta"]
@@ -75,7 +83,7 @@ def build(seconds, seed=7, mood="calm"):
         for m in notes:
             seg += pad_voice(midi_hz(m), chord_dur)
         seg /= len(notes)
-        seg *= env_ad(n, xf, xf)
+        seg *= env_ad(n, xf, xf) * cfg.get("pad", 1.0)
         s = int(SR * pos)
         buf[s:s + n] += seg
         pos += step
@@ -98,12 +106,12 @@ def build(seconds, seed=7, mood="calm"):
         while pos < seconds - 1:
             notes = chords[int(pos // (chord_dur - xf)) % len(chords)]
             note = notes[i % len(notes)] + 12
-            d = 0.9
+            d = cfg.get("arp_dur", 0.9)
             n = int(SR * d)
             st = int(SR * pos)
             if st + n <= len(buf):
                 buf[st:st + n] += cfg["arp"] * bell(midi_hz(note), d)
-            pos += 0.5
+            pos += cfg.get("arp_step", 0.5)
             i += 1
 
     buf = buf[:total]
